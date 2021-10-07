@@ -1,0 +1,15 @@
+###### Requirements without Version Specifiers ######`
+numpy
+scipy
+sympy
+pandas
+matplotlib
+plotly
+scikit-learn
+db-sqlite3
+seaborn
+pubchempy
+biopython
+pysb
+bionetgen
+bioservices
