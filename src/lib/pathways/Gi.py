@@ -1,11 +1,11 @@
 ##################################################################################
 ##                 THE DOPAMINE RECEPTORS CASCADE VERSION 1.0                   ##
 ##                                                                              ##
-##                              D1 receptor                                     ##
+##                        G alpha i coupled receptor                            ##
 ##                                                                              ##
-##                               PATHWAY 2                                      ##
+##                        PATHWAY based on D2 receptor                          ##
 ##                                                                              ##
-##                        last modification 10 April 2019                       ##
+##                        last modification 21 Oct 2021                         ##
 ##                                                                              ##
 ##   References:                                                                ##
 ##   Nair, A. G. et al (2015). Sensing Positive versus Negative Reward Signals  ##
@@ -17,12 +17,93 @@ from pysb import *
 from pysb.macros import *
 
 
-def network(Rtotal, LR):
+def network(LR=None, kinetics=True, **kwargs):
+    defaultKwargs = {
+        'L_init':0.01,
+        'R_init': 2,
+        'Gi_init': 3,
+        'AC5_init': 0.7,
+        'Ca_cytos_free': 0.06,
+        'ATP_init': 5000,
+        'PDE4_init': 2,
+        'PDE10_init': 1,
+        'PKA_init': 1.2,        
+        'RL_kon':0.1*1E3,
+        'RL_koff':200,
+        'RL_Gi_kon':6.6*1E3,
+        'RL_Gi_koff':200,
+        'RL_Gi_decay': 60,
+        'GaiGTP_decay': 30,
+        'Gi_formation': 100,
+        'AC5_ATP_kon': 0.0001*1E3,
+        'AC5_ATP_koff': 1,
+        'AC5_basal': 1,
+        'AC5_reverse_basal': 0.0004,
+        'AC5_Ca_kon': 0.001*1E3,
+        'AC5_Ca_koff': 0.9,
+        'AC5_Ca_ATP_kon': 7.50E-5*1E3,
+        'AC5_Ca_ATP_koff': 1,
+        'AC5_Ca_ATP_to_cAMP': 0.5,
+        'AC5_Ca_ATP_to_cAMP_reverse': 0.00015,
+        'AC5_ATP_Ca_kon': 0.001*1E3,
+        'AC5_ATP_Ca_koff': 0.9,
+        'AC5_GaiGTP_kon': 50*1E3,
+        'AC5_GaiGTP_koff': 5,
+        'AC5_GaiGTP_ATP_kon': 6.25E-5*1E3,
+        'AC5_GaiGTP_ATP_koff': 1,
+        'AC5_ATP_GaiGTP_kon': 50*1E3,
+        'AC5_ATP_GaiGTP_koff': 5,
+        'AC5_GaiGTP_ATP_to_cAMP': 0.25,
+        'AC5_GaiGTP_ATP_to_cAMP_reverse': 0.00105,
+        'AC5_GaiGTP_decay': 30,
+        'AC5_GaiGTP_decay_koff': 30,
+        'AC5_Ca_GaiGTP_kon': 50*1E3,
+        'AC5_Ca_GaiGTP_koff': 5,
+        'AC5_Ca_GaiGTP_ATP_kon': 5.63E-5*1E3,
+        'AC5_Ca_GaiGTP_ATP_koff': 1,
+        'AC5_Ca_ATP_GaiGTP_kon': 50*1E3,
+        'AC5_Ca_ATP_GaiGTP_koff': 5,
+        'AC5_Ca_GaiGTP_ATP_to_cAMP': 0.125,
+        'AC5_Ca_GaiGTP_ATP_to_cAMP_reverse': 2.81E-5,
+        'AC5_Ca_GaiGTP_decay': 30,
+        'AC5_Ca_GaiGTP_ATP_decay': 30,
+        'PDE4_cAMP_kon': 0.01*1E3,
+        'PDE4_cAMP_koff': 1,
+        'PDE4_cAMP_to_AMP': 2,
+        'PDE10_2cAMP_kon': 1.0E-6*1E3,
+        'PDE10_2cAMP_koff': 9,
+        'PDE10_cAMP_kon': 0.1*1E3,
+        'PDE10_cAMP_koff': 2,
+        'PDE10_2cAMP_cAMP_kon': 0.13*1E3,
+        'PDE10_2cAMP_cAMP_koff': 2,
+        'PDE10_cAMP_decay': 3,
+        'PDE10_2cAMP_cAMP_decay': 10,
+        'PKA_cAMP2_kon': 0.00026*1E3,
+        'PKA_cAMP2_koff': 1,
+        'PKA_cAMP4_kon': 0.000346*1E3,
+        'PKA_cAMP4_koff': 1,
+        'PKA_activation': 10*1E3,
+        'PKA_activation_reverse': 0.025
+    }
+    parameters={**defaultKwargs, **kwargs}
 
     #Start a model
     Model()
 
+    """IMPORTANT INFO:
+        
+        The receptor MONOMER is represented by:
+            * 1 binding site;
+            * 1 phosporilation site;
+            * 1 state site 
+
+        LR is represented by the state site: R(R_b1=None, R_p='p0', R_s='a'), REACTION1
+        Golf binds to the biding site: R(R_b1=50, R_p='p0', R_s='a') % Golf(Golf_b1=50), REACTION3
+        Arrestin acts on the phosporilate site (not described in this short network).
+        
+    """
     #MONOMERS
+    Monomer('L', ['L_b1'])
     Monomer('R', ['R_b1', 'R_p', 'R_s'], {'R_p':['p0','p1'], 'R_s':['i','a']})    # Dopamine receptor 1 with two binding sites: for ligand and G-proteins
     Monomer('Gi', ['Gi_b1'])
     Monomer('GaiGTP', ['GaiGTP_b1'])
@@ -40,33 +121,46 @@ def network(Rtotal, LR):
     Monomer('PKAreg')
 
 
-    #INITIAL CONDITIONS μM
-    Initial(R(R_b1=None, R_p='p0', R_s='a'), Parameter('RL_0', LR))   # μM
-    Initial(R(R_b1=None, R_p='p0', R_s='i'), Parameter('R_0', Rtotal-LR))   # μM
-    Initial(Gi(Gi_b1=None), Parameter('Gi_0', 2))                   # μM
-    Initial(AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='i'), Parameter('AC5_0', 0.7))  # μM
-    Initial(Ca(Ca_b1=None, Ca_l='cytos', Ca_s='free'), Parameter('Ca_cytos_free', 0.06)) # μM
-    Initial(ATP(), Parameter('ATP_0', 5000))# μM
-    Initial(PDE4(PDE4_s='i'), Parameter('PDE4_0', 2))# μM
-    Initial(PDE10(PDE10_c='N', PDE10_s='i'), Parameter('PDE10_0', 0.7))# μM
-    Initial(PKA(PKA_s='cAMP0'), Parameter('PKA_0', 1.2))# μM
+    #INITIAL CONDITIONS
+    if kinetics==True:
+        Initial(R(R_b1=None, R_p='p0', R_s='i'), Parameter('R_0', parameters['R_init'])) 
+        Initial(L(L_b1=None), Parameter('L_0', parameters['L_init']))   
+    else:
+        Initial(R(R_b1=None, R_p='p0', R_s='a'), Parameter('RL_0', LR))   
+        Initial(R(R_b1=None, R_p='p0', R_s='i'), Parameter('R_0', parameters['R_init']-LR))  
+
+    
+    Initial(Gi(Gi_b1=None), )                  
+    Initial(AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='i'), Parameter('AC5_0', parameters['AC5_init']))  
+    Initial(Ca(Ca_b1=None, Ca_l='cytos', Ca_s='free'), Parameter('Ca_cytos_free', parameters['Ca_cytos_free'])) 
+    Initial(ATP(), Parameter('ATP_0', parameters['ATP_init']))
+    Initial(PDE4(PDE4_s='i'), Parameter('PDE4_0', parameters['PDE4_init']))
+    Initial(PDE10(PDE10_c='N', PDE10_s='i'), Parameter('PDE10_0', parameters['PDE10_init']))
+    Initial(PKA(PKA_s='cAMP0'), Parameter('PKA_0', parameters['PKA_init']))
 
     #REACTIONS
     ##Dopamine and the G-protein Coupled RECEPTORS
     '''The R can bind either the inactive G protein first, and then
     dopamine, or dopamine first and then and then the inactivate G protein.'''
-    Parameter('kRL_Gi_1',1.2*1E3)      # 1/(μM*s) |Association constant of the complex M4R_Ach_Gi
-    Parameter('kRL_Gi_2',90)       # 1/s      |Dissociation constant of the complex M4R_Ach_Gi
-    Rule('reaction7', R(R_b1=None, R_p='p0', R_s='a') + Gi(Gi_b1=None) | R(R_b1=50, R_p='p0', R_s='a') % Gi(Gi_b1=50), kRL_Gi_1, kRL_Gi_2)
 
-    Parameter('kRL_Gi_decay', 60)   # 1/s      |Rate of formation of M4R_DA + Gi
-    Rule('reaction8', R(R_b1=50, R_p='p0', R_s='a') % Gi(Gi_b1=50) >> R(R_b1=None, R_p='p0', R_s='a') + Gbgi() + GaiGTP(GaiGTP_b1=None) , kRL_Gi_decay)
+    if kinetics == True:
+        Parameter('RL_kon', parameters['RL_kon'])  # 1/(μM*s) |Association constant of the complex D1R_DA_Golf
+        Parameter('RL_koff', parameters['RL_koff'])    # 1/s      |Dissociation constant of the complex D1R_DA_Golf
+        Rule('reaction1', R(R_b1=None, R_p='p0', R_s='i') + L(L_b1=None) | R(R_b1=None, R_p='p0', R_s='a'), RL_kon, RL_koff)
+    else: pass
 
-    Parameter('kGaiGTP_decay', 30)      # 1/s      |Rate of formation of GaiGDP
-    Rule('reaction13', GaiGTP(GaiGTP_b1=None) >> GaiGDP(), kGaiGTP_decay)
+    Parameter('RL_Gi_kon', parameters['RL_Gi_kon'])
+    Parameter('RL_Gi_koff', parameters['RL_Gi_koff'])
+    Rule('reaction3', R(R_b1=None, R_p='p0', R_s='a') + Gi(Gi_b1=None) | R(R_b1=50, R_p='p0', R_s='a') % Gi(Gi_b1=50), RL_Gi_kon, RL_Gi_koff)
 
-    Parameter('kGi_formation', 100)     # 1/s      |Rate of formation of Gi
-    Rule('reaction14', Gbgi() + GaiGDP() >> Gi(Gi_b1=None), kGi_formation)
+    Parameter('RL_Gi_decay', parameters['RL_Gi_decay'])
+    Rule('reaction9', R(R_b1=50, R_p='p0', R_s='a') % Gi(Gi_b1=50) >> R(R_b1=None, R_p='p0', R_s='a') + Gbgi() + GaiGTP(GaiGTP_b1=None) , RL_Gi_decay)
+
+    Parameter('GaiGTP_decay', parameters['GaiGTP_decay'])
+    Rule('reaction13', GaiGTP(GaiGTP_b1=None) >> GaiGDP(), GaiGTP_decay)
+
+    Parameter('Gi_formation', parameters['kGi_formation'])
+    Rule('reaction14', Gbgi() + GaiGDP() >> Gi(Gi_b1=None), Gi_formation)
 
     '''CYCLIC AMP FORMATION AND PKA ACTIVATION:
     - active GaolfGTP binds to and activate cyclase type V (AC5), which produces cyclic AMP (cAMP)
@@ -77,128 +171,128 @@ def network(Rtotal, LR):
     '''
 
     # AC5 basal activity
-    Parameter('kAC5_ATP_1', 0.0001*1E3)     # 1/(μM*s) |Association constant of the complex AC5_ATP
-    Parameter('kAC5_ATP_2', 1)          # 1/s      |Dissociation constant of the complex AC5_ATP
-    Rule('reaction21', AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='i') + ATP() | AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='a') , kAC5_ATP_1, kAC5_ATP_2)
+    Parameter('AC5_ATP_kon', parameters['AC5_ATP_kon'])
+    Parameter('AC5_ATP_koff', parameters['AC5_ATP_koff'])
+    Rule('reaction21', AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='i') + ATP() | AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='a') , AC5_ATP_kon, AC5_ATP_koff)
 
-    Parameter('kAC5_basal', 1)          # 1/s      |Rate constant of basal formation of cAMP
-    Rule('reaction22', AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='a') >> AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='i') + cAMP(), kAC5_basal)
+    Parameter('AC5_basal', parameters['AC5_basal'])
+    Rule('reaction22', AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='a') >> AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='i') + cAMP(), AC5_basal)
 
-    Parameter('kAC5_reverse_basal', 0.0004) # 1/s  |Reverse Rate constant of basal formation of cAMP
-    Rule('reaction23', AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='i') + cAMP() >> AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='a'), kAC5_reverse_basal )
+    Parameter('AC5_reverse_basal', parameters['AC5_reverse_basal'])
+    Rule('reaction23', AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='i') + cAMP() >> AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='a'), AC5_reverse_basal)
 
     # Interaction between AC5 and Ca2+
-    Parameter('kAC5_Ca_1', 0.001*1E3)       # 1/(μM*s) |Association constant of the complex AC5_Ca
-    Parameter('kAC5_Ca_2', 0.9)         # 1/s      |Dissociation constant of the complex AC5_Ca
-    Rule('reaction16', AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='i') + Ca(Ca_b1=None, Ca_l='cytos', Ca_s='free') | AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='i') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff'), kAC5_Ca_1, kAC5_Ca_2)
+    Parameter('AC5_Ca_kon', parameters['AC5_Ca_kon'])
+    Parameter('AC5_Ca_koff', parameters['AC5_Ca_koff'])
+    Rule('reaction16', AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='i') + Ca(Ca_b1=None, Ca_l='cytos', Ca_s='free') | AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='i') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff'), AC5_Ca_kon, AC5_Ca_koff)
 
-    Parameter('kAC5_Ca_ATP_1', 7.50E-5*1E3) # 1/(μM*s) |Association constant of the complex AC5_Ca_ATP
-    Parameter('kAC5_Ca_ATP_2', 1)       # 1/s      |Dissociation constant of the complex AC5_Ca_ATP
-    Rule('reaction24', AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='i') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') + ATP() | AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='a') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff'), kAC5_Ca_ATP_1, kAC5_Ca_ATP_2)
+    Parameter('AC5_Ca_ATP_kon', parameters['AC5_Ca_ATP_kon'])
+    Parameter('AC5_Ca_ATP_koff', parameters['AC5_Ca_ATP_koff'])
+    Rule('reaction24', AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='i') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') + ATP() | AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='a') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff'), AC5_Ca_ATP_kon, AC5_Ca_ATP_koff)
 
-    Parameter('kAC5_Ca_ATP_to_cAMP', 0.5 )  # 1/s      |Convertion rate of ATP into cAMP by AC5_Ca
-    Rule('reaction25', AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='a') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') >> cAMP() + AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='i') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff'), kAC5_Ca_ATP_to_cAMP)
+    Parameter('AC5_Ca_ATP_to_cAMP', parameters['AC5_Ca_ATP_to_cAMP'])
+    Rule('reaction25', AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='a') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') >> cAMP() + AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='i') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff'), AC5_Ca_ATP_to_cAMP)
 
-    Parameter('kAC5_Ca_ATP_to_cAMP_reverse', 0.00015) # 1/s      |Reverse Convertion rate of ATP into cAMP by AC5_Ca
-    Rule('reaction26', AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='i') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') + cAMP() >> AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='a') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff'), kAC5_Ca_ATP_to_cAMP_reverse)
+    Parameter('AC5_Ca_ATP_to_cAMP_reverse', parameters['AC5_Ca_ATP_to_cAMP_reverse'])
+    Rule('reaction26', AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='i') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') + cAMP() >> AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='a') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff'), AC5_Ca_ATP_to_cAMP_reverse)
 
-    Parameter('kAC5_ATP_Ca_1', 0.001*1E3)       # 1/(μM*s) |
-    Parameter('kAC5_ATP_Ca_2', 0.9)         # 1/s      |
-    Rule('reaction30', AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='a') + Ca(Ca_b1=None, Ca_l='cytos', Ca_s='free') | AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='a') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') , kAC5_ATP_Ca_1, kAC5_ATP_Ca_2)
+    Parameter('AC5_ATP_Ca_kon', parameters['AC5_ATP_Ca_kon'])
+    Parameter('AC5_ATP_Ca_koff', parameters['AC5_ATP_Ca_koff'])
+    Rule('reaction30', AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='a') + Ca(Ca_b1=None, Ca_l='cytos', Ca_s='free') | AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='a') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') , AC5_ATP_Ca_kon, AC5_ATP_Ca_koff)
 
     # Interaction between AC5 and Gai
+    Parameter('AC5_GaiGTP_kon', parameters['AC5_GaiGTP_kon'])
+    Parameter('AC5_GaiGTP_koff', parameters['AC5_GaiGTP_koff'])
+    Rule('reaction37', AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='i') + GaiGTP(GaiGTP_b1=None) | AC5(AC5_b1=None, AC5_b2=None, AC5_b3=10, AC5_s='i') % GaiGTP(GaiGTP_b1=10) , AC5_GaiGTP_kon, AC5_GaiGTP_koff)
 
-    Parameter('kAC5_GaiGTP_1', 50*1E3)          # 1/(μM*s) |
-    Parameter('kAC5_GaiGTP_2', 5)           # 1/s
-    Rule('reaction37', AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='i') + GaiGTP(GaiGTP_b1=None) | AC5(AC5_b1=None, AC5_b2=None, AC5_b3=10, AC5_s='i') % GaiGTP(GaiGTP_b1=10) , kAC5_GaiGTP_1, kAC5_GaiGTP_2)
+    Parameter('AC5_GaiGTP_ATP_kon', parameters['AC5_GaiGTP_ATP_kon'])
+    Parameter('AC5_GaiGTP_ATP_koff', parameters['AC5_GaiGTP_ATP_koff'])
+    Rule('reaction38', AC5(AC5_b1=None, AC5_b2=None, AC5_b3=10, AC5_s='i') % GaiGTP(GaiGTP_b1=10) + ATP() | AC5(AC5_b1=None, AC5_b2=None, AC5_b3=10, AC5_s='a') % GaiGTP(GaiGTP_b1=10), AC5_GaiGTP_ATP_kon, AC5_GaiGTP_ATP_koff)
 
-    Parameter('kAC5_GaiGTP_ATP_1', 6.25E-5*1E3) # 1/(μM*s) |
-    Parameter('kAC5_GaiGTP_ATP_2', 1)       # 1/s      |
-    Rule('reaction38', AC5(AC5_b1=None, AC5_b2=None, AC5_b3=10, AC5_s='i') % GaiGTP(GaiGTP_b1=10) + ATP() | AC5(AC5_b1=None, AC5_b2=None, AC5_b3=10, AC5_s='a') % GaiGTP(GaiGTP_b1=10), kAC5_GaiGTP_ATP_1, kAC5_GaiGTP_ATP_2)
+    Parameter('AC5_ATP_GaiGTP_kon', parameters['AC5_ATP_GaiGTP_kon'])
+    Parameter('AC5_ATP_GaiGTP_koff', parameters['AC5_ATP_GaiGTP_koff'])
+    Rule('reaction39', AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='a') + GaiGTP(GaiGTP_b1=None) | AC5(AC5_b1=None, AC5_b2=None, AC5_b3=10, AC5_s='a') % GaiGTP(GaiGTP_b1=10), AC5_ATP_GaiGTP_kon, AC5_ATP_GaiGTP_koff)
 
-    Parameter('kAC5_ATP_GaiGTP_1', 50*1E3)      # 1/(μM*s) |
-    Parameter('kAC5_ATP_GaiGTP_2', 5)       # 1/s
-    Rule('reaction39', AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='a') + GaiGTP(GaiGTP_b1=None) | AC5(AC5_b1=None, AC5_b2=None, AC5_b3=10, AC5_s='a') % GaiGTP(GaiGTP_b1=10), kAC5_ATP_GaiGTP_1, kAC5_ATP_GaiGTP_2)
+    Parameter('AC5_GaiGTP_ATP_to_cAMP', parameters['AC5_GaiGTP_ATP_to_cAMP'])
+    Rule('reaction40', AC5(AC5_b1=None, AC5_b2=None, AC5_b3=10, AC5_s='a') % GaiGTP(GaiGTP_b1=10) >> AC5(AC5_b1=None, AC5_b2=None, AC5_b3=10, AC5_s='i') % GaiGTP(GaiGTP_b1=10) + cAMP(), AC5_GaiGTP_ATP_to_cAMP)
 
-    Parameter('kAC5_GaiGTP_ATP_to_cAMP', 0.25) # 1/s      |
-    Rule('reaction40', AC5(AC5_b1=None, AC5_b2=None, AC5_b3=10, AC5_s='a') % GaiGTP(GaiGTP_b1=10) >> AC5(AC5_b1=None, AC5_b2=None, AC5_b3=10, AC5_s='i') % GaiGTP(GaiGTP_b1=10) + cAMP(), kAC5_GaiGTP_ATP_to_cAMP)
+    Parameter('AC5_GaiGTP_ATP_to_cAMP_reverse', parameters['AC5_GaiGTP_ATP_to_cAMP_reverse'])
+    Rule('reaction41', AC5(AC5_b1=None, AC5_b2=None, AC5_b3=10, AC5_s='i') % GaiGTP(GaiGTP_b1=10) + cAMP() >> AC5(AC5_b1=None, AC5_b2=None, AC5_b3=10, AC5_s='a') % GaiGTP(GaiGTP_b1=10), AC5_GaiGTP_ATP_to_cAMP_reverse)
 
-    Parameter('kAC5_GaiGTP_ATP_to_cAMP_reverse', 0.00105) # 1/s      |
-    Rule('reaction41', AC5(AC5_b1=None, AC5_b2=None, AC5_b3=10, AC5_s='i') % GaiGTP(GaiGTP_b1=10) + cAMP() >> AC5(AC5_b1=None, AC5_b2=None, AC5_b3=10, AC5_s='a') % GaiGTP(GaiGTP_b1=10), kAC5_GaiGTP_ATP_to_cAMP_reverse)
+    Parameter('AC5_GaiGTP_decay', parameters['AC5_GaiGTP_decay'])
+    Rule('reaction42', AC5(AC5_b1=None, AC5_b2=None, AC5_b3=10, AC5_s='i') % GaiGTP(GaiGTP_b1=10) >> AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='i') + GaiGDP(), AC5_GaiGTP_decay)
 
-    Parameter('kAC5_GaiGTP_decay', 30)       # 1/s      |
-    Rule('reaction42', AC5(AC5_b1=None, AC5_b2=None, AC5_b3=10, AC5_s='i') % GaiGTP(GaiGTP_b1=10) >> AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='i') + GaiGDP(), kAC5_GaiGTP_decay)
-
-    Parameter('kAC5_GaiGTP_decay_2', 30)     # 1/s      |
-    Rule('reaction43', AC5(AC5_b1=None, AC5_b2=None, AC5_b3=10, AC5_s='a') % GaiGTP(GaiGTP_b1=10) >> AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='a') + GaiGDP(), kAC5_GaiGTP_decay_2)
+    Parameter('AC5_GaiGTP_decay_koff', parameters['AC5_GaiGTP_decay_koff'])
+    Rule('reaction43', AC5(AC5_b1=None, AC5_b2=None, AC5_b3=10, AC5_s='a') % GaiGTP(GaiGTP_b1=10) >> AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='a') + GaiGDP(), AC5_GaiGTP_decay_koff)
 
     # Interaction between AC5, Ca2+, and Gai
+    Parameter('AC5_Ca_GaiGTP_kon', parameters['AC5_Ca_GaiGTP_kon'])
+    Parameter('AC5_Ca_GaiGTP_koff', parameters['AC5_Ca_GaiGTP_koff'])
+    Rule('reaction55', AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='i') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') + GaiGTP(GaiGTP_b1=None) | AC5(AC5_b1=None, AC5_b2=20, AC5_b3=10, AC5_s='i') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') % GaiGTP(GaiGTP_b1=10), AC5_Ca_GaiGTP_kon , AC5_Ca_GaiGTP_koff)
 
-    Parameter('kAC5_Ca_GaiGTP_1', 50*1E3)   # 1/(μM*s) |
-    Parameter('kAC5_Ca_GaiGTP_2', 5)    # 1/s      |
-    Rule('reaction55', AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='i') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') + GaiGTP(GaiGTP_b1=None) | AC5(AC5_b1=None, AC5_b2=20, AC5_b3=10, AC5_s='i') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') % GaiGTP(GaiGTP_b1=10), kAC5_Ca_GaiGTP_1 , kAC5_Ca_GaiGTP_2)
+    Parameter('AC5_Ca_GaiGTP_ATP_kon', parameters['AC5_Ca_GaiGTP_ATP_kon'])
+    Parameter('AC5_Ca_GaiGTP_ATP_koff', parameters['AC5_Ca_GaiGTP_ATP_koff'])
+    Rule('reaction56', AC5(AC5_b1=None, AC5_b2=20, AC5_b3=10, AC5_s='i') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') % GaiGTP(GaiGTP_b1=10) + ATP() | AC5(AC5_b1=None, AC5_b2=20, AC5_b3=10, AC5_s='a') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') % GaiGTP(GaiGTP_b1=10), AC5_Ca_GaiGTP_ATP_kon , AC5_Ca_GaiGTP_ATP_koff )
 
-    Parameter('kAC5_Ca_GaiGTP_ATP_1', 5.63E-5*1E3)  # 1/(μM*s) |
-    Parameter('kAC5_Ca_GaiGTP_ATP_2', 1)    # 1/s      |
-    Rule('reaction56', AC5(AC5_b1=None, AC5_b2=20, AC5_b3=10, AC5_s='i') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') % GaiGTP(GaiGTP_b1=10) + ATP() | AC5(AC5_b1=None, AC5_b2=20, AC5_b3=10, AC5_s='a') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') % GaiGTP(GaiGTP_b1=10), kAC5_Ca_GaiGTP_ATP_1 , kAC5_Ca_GaiGTP_ATP_2 )
+    Parameter('AC5_Ca_ATP_GaiGTP_kon', parameters['AC5_Ca_ATP_GaiGTP_kon'])
+    Parameter('AC5_Ca_ATP_GaiGTP_koff', parameters['AC5_Ca_ATP_GaiGTP_koff'])
+    Rule('reaction57', AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='a') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') + GaiGTP(GaiGTP_b1=None) | AC5(AC5_b1=None, AC5_b2=20, AC5_b3=10, AC5_s='a') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') % GaiGTP(GaiGTP_b1=10), AC5_Ca_ATP_GaiGTP_kon , AC5_Ca_ATP_GaiGTP_koff)
 
-    Parameter('kAC5_Ca_ATP_GaiGTP_1', 50*1E3)   # 1/(μM*s)
-    Parameter('kAC5_Ca_ATP_GaiGTP_2', 5)    # 1/s      |
-    Rule('reaction57', AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='a') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') + GaiGTP(GaiGTP_b1=None) | AC5(AC5_b1=None, AC5_b2=20, AC5_b3=10, AC5_s='a') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') % GaiGTP(GaiGTP_b1=10), kAC5_Ca_ATP_GaiGTP_1 , kAC5_Ca_ATP_GaiGTP_2)
+    Parameter('AC5_Ca_GaiGTP_ATP_to_cAMP', parameters['AC5_Ca_GaiGTP_ATP_to_cAMP'])
+    Rule('reaction58', AC5(AC5_b1=None, AC5_b2=20, AC5_b3=10, AC5_s='a') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') % GaiGTP(GaiGTP_b1=10) >> AC5(AC5_b1=None, AC5_b2=20, AC5_b3=10, AC5_s='i') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') % GaiGTP(GaiGTP_b1=10) + cAMP(), AC5_Ca_GaiGTP_ATP_to_cAMP)
 
-    Parameter('kAC5_Ca_GaiGTP_ATP_to_cAMP', 0.125) # 1/s      |
-    Rule('reaction58', AC5(AC5_b1=None, AC5_b2=20, AC5_b3=10, AC5_s='a') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') % GaiGTP(GaiGTP_b1=10) >> AC5(AC5_b1=None, AC5_b2=20, AC5_b3=10, AC5_s='i') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') % GaiGTP(GaiGTP_b1=10) + cAMP(), kAC5_Ca_GaiGTP_ATP_to_cAMP)
+    Parameter('AC5_Ca_GaiGTP_ATP_to_cAMP_reverse', parameters['AC5_Ca_GaiGTP_ATP_to_cAMP_reverse'])
+    Rule('reaction59', AC5(AC5_b1=None, AC5_b2=20, AC5_b3=10, AC5_s='i') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') % GaiGTP(GaiGTP_b1=10) + cAMP() >> AC5(AC5_b1=None, AC5_b2=20, AC5_b3=10, AC5_s='a') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') % GaiGTP(GaiGTP_b1=10), AC5_Ca_GaiGTP_ATP_to_cAMP_reverse)
 
-    Parameter('kAC5_Ca_GaiGTP_ATP_to_cAMP_reverse', 2.81E-5)# 1/s      |
-    Rule('reaction59', AC5(AC5_b1=None, AC5_b2=20, AC5_b3=10, AC5_s='i') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') % GaiGTP(GaiGTP_b1=10) + cAMP() >> AC5(AC5_b1=None, AC5_b2=20, AC5_b3=10, AC5_s='a') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') % GaiGTP(GaiGTP_b1=10), kAC5_Ca_GaiGTP_ATP_to_cAMP_reverse)
+    Parameter('AC5_Ca_GaiGTP_decay', parameters['AC5_Ca_GaiGTP_decay'])
+    Rule('reaction60', AC5(AC5_b1=None, AC5_b2=20, AC5_b3=10, AC5_s='i') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') % GaiGTP(GaiGTP_b1=10) >> AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='i') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') + GaiGDP(), AC5_Ca_GaiGTP_decay)
 
-    Parameter('kAC5_Ca_GaiGTP_decay', 30)# 1/s      |
-    Rule('reaction60', AC5(AC5_b1=None, AC5_b2=20, AC5_b3=10, AC5_s='i') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') % GaiGTP(GaiGTP_b1=10) >> AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='i') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') + GaiGDP(), kAC5_Ca_GaiGTP_decay)
-
-    Parameter('kAC5_Ca_GaiGTP_ATP_decay', 30)# 1/s      |
-    Rule('reaction61', AC5(AC5_b1=None, AC5_b2=20, AC5_b3=10, AC5_s='a') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') % GaiGTP(GaiGTP_b1=10) >> AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='a') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') + GaiGDP(), kAC5_Ca_GaiGTP_ATP_decay)
+    Parameter('AC5_Ca_GaiGTP_ATP_decay', parameters['AC5_Ca_GaiGTP_ATP_decay'])
+    Rule('reaction61', AC5(AC5_b1=None, AC5_b2=20, AC5_b3=10, AC5_s='a') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') % GaiGTP(GaiGTP_b1=10) >> AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='a') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') + GaiGDP(), AC5_Ca_GaiGTP_ATP_decay)
 
     '''Several Subtypes of Phosphodiesterases (PDE) degrade cAMP'''
-    Parameter('kPDE4_cAMP_1', 0.01*1E3)# 1/(μM*s) |
-    Parameter('kPDE4_cAMP_2', 1)# 1/s      |
-    Rule('reaction73', PDE4(PDE4_s='i') + cAMP() | PDE4(PDE4_s='a'), kPDE4_cAMP_1, kPDE4_cAMP_2)
+    Parameter('PDE104_cAMP_kon', parameters['PDE104_cAMP_kon'])
+    Parameter('PDE4_cAMP_koff', parameters['PDE4_cAMP_koff'])
+    Rule('reaction73', PDE4(PDE4_s='i') + cAMP() | PDE4(PDE4_s='a'), PDE4_cAMP_kon, PDE4_cAMP_koff)
 
-    Parameter('kPDE4_cAMP_to_AMP', 2)
-    Rule('reaction74', PDE4(PDE4_s='a') >> PDE4(PDE4_s='i') + AMP(), kPDE4_cAMP_to_AMP)
+    Parameter('PDE4_cAMP_to_AMP', parameters['PDE4_cAMP_to_AMP'])
+    Rule('reaction75', PDE4(PDE4_s='a') >> PDE4(PDE4_s='i') + AMP(), PDE4_cAMP_to_AMP)
 
-    Parameter('kPDE10_2cAMP_1', 1.0E-6*1E3)# 1/(μM*s) |
-    Parameter('kPDE10_2cAMP_2', 9)# 1/s
-    Rule('reaction75', PDE10(PDE10_c='N', PDE10_s='i') + cAMP() + cAMP() | PDE10(PDE10_c='Y', PDE10_s='i'), kPDE10_2cAMP_1, kPDE10_2cAMP_2)
+    Parameter('PDE10_2cAMP_kon', parameters['PDE10_2cAMP_kon'])
+    Parameter('PDE10_2cAMP_koff', parameters['PDE10_2cAMP_koff'])   
+    Rule('reaction74', PDE10(PDE10_c='N', PDE10_s='i') + cAMP() + cAMP() | PDE10(PDE10_c='Y', PDE10_s='i'), PDE10_2cAMP_kon, PDE10_2cAMP_koff)
 
-    Parameter('kPDE10_cAMP_1', 0.1*1E3)# 1/(μM*s) |
-    Parameter('kPDE10_cAMP_2', 2)# 1/s      |
-    Rule('reaction76', PDE10(PDE10_c='N', PDE10_s='i') + cAMP() | PDE10(PDE10_c='N', PDE10_s='a'),  kPDE10_cAMP_1, kPDE10_cAMP_2)
+    Parameter('PDE10_cAMP_kon', parameters['PDE10_cAMP_kon'])
+    Parameter('PDE10_cAMP_koff', parameters['PDE10_cAMP_koff'])
+    Rule('reaction76', PDE10(PDE10_c='N', PDE10_s='i') + cAMP() | PDE10(PDE10_c='N', PDE10_s='a'),  PDE10_cAMP_kon, PDE10_cAMP_koff)
 
-    Parameter('kPDE10_2cAMP_cAMP_1', 0.13*1E3)# 1/(μM*s) |
-    Parameter('kPDE10_2cAMP_cAMP_2', 2)# 1/s      |
-    Rule('reaction77', PDE10(PDE10_c='Y', PDE10_s='i') + cAMP() | PDE10(PDE10_c='Y', PDE10_s='a'), kPDE10_2cAMP_cAMP_1, kPDE10_2cAMP_cAMP_2)
+    Parameter('PDE10_2cAMP_cAMP_kon', parameters['PDE10_2cAMP_cAMP_kon'])
+    Parameter('PDE10_2cAMP_cAMP_koff', parameters['PDE10_2cAMP_cAMP_koff'])
+    Rule('reaction77', PDE10(PDE10_c='Y', PDE10_s='i') + cAMP() | PDE10(PDE10_c='Y', PDE10_s='a'), PDE10_2cAMP_cAMP_kon, PDE10_2cAMP_cAMP_koff)
 
-    Parameter('kPDE10_cAMP_decay', 3)# 1/s      |
-    Rule('reaction78', PDE10(PDE10_c='N', PDE10_s='a') >> PDE10(PDE10_c='N', PDE10_s='i') + AMP(), kPDE10_cAMP_decay)
+    Parameter('PDE10_cAMP_decay', parameters[''])
+    Rule('reaction78', PDE10(PDE10_c='N', PDE10_s='a') >> PDE10(PDE10_c='N', PDE10_s='i') + AMP(), PDE10_cAMP_decay)
 
-    Parameter('kPDE10_2cAMP_cAMP_decay', 10)# 1/s      |
-    Rule('reaction79', PDE10(PDE10_c='Y', PDE10_s='a') >> PDE10(PDE10_c='Y', PDE10_s='i') + AMP(), kPDE10_2cAMP_cAMP_decay)
+    Parameter('PDE10_2cAMP_cAMP_decay', parameters['PDE10_2cAMP_cAMP_decay'])
+    Rule('reaction79', PDE10(PDE10_c='Y', PDE10_s='a') >> PDE10(PDE10_c='Y', PDE10_s='i') + AMP(), PDE10_2cAMP_cAMP_decay)
 
     '''cAMP Activates PKA'''
-    Parameter('kPKA_cAMP2_1', 0.00026*1E3)# 1/(μM*s) |
-    Parameter('kPKA_cAMP2_2', 1)# 1/s |
-    Rule('reaction80', PKA(PKA_s='cAMP0') + cAMP() + cAMP() | PKA(PKA_s='cAMP2'), kPKA_cAMP2_1, kPKA_cAMP2_2)
+    Parameter('PKA_cAMP2_kon', parameters['PKA_cAMP2_kon'])
+    Parameter('PKA_cAMP2_koff', parameters['PKA_cAMP2_koff'])
+    Rule('reaction80', PKA(PKA_s='cAMP0') + cAMP() + cAMP() | PKA(PKA_s='cAMP2'), PKA_cAMP2_kon, PKA_cAMP2_koff)
 
-    Parameter('kPKA_cAMP4_1', 0.000346*1E3)# 1/(μM*s) |
-    Parameter('kPKA_cAMP4_2', 1)# 1/s |
-    Rule('reaction81', PKA(PKA_s='cAMP2') + cAMP() + cAMP() | PKA(PKA_s='cAMP4'), kPKA_cAMP4_1, kPKA_cAMP4_2)
+    Parameter('PKA_cAMP4_kon', parameters['PKA_cAMP4_kon'])
+    Parameter('PKA_cAMP4_koff', parameters['PKA_cAMP4_koff'])
+    Rule('reaction81', PKA(PKA_s='cAMP2') + cAMP() + cAMP() | PKA(PKA_s='cAMP4'), PKA_cAMP4_kon, PKA_cAMP4_koff)
 
-    Parameter('kPKA_activation', 10*1E3)# 1/(μM*s) |
-    Parameter('kPKA_activation_reverse', 0.01)# 1/s |
-    Rule('reaction82', PKA(PKA_s='cAMP4') | PKAc(PKAc_b1=None) + PKAreg(), kPKA_activation, kPKA_activation_reverse)
+    Parameter('PKA_activation', parameters['PKA_activation'])
+    Parameter('PKA_activation_reverse', parameters['PKA_activation_reverse'])
+    Rule('reaction82', PKA(PKA_s='cAMP4') | PKAc(PKAc_b1=None) + PKAreg(), PKA_activation, PKA_activation_reverse)
 
 
     # OBSERVABLES
+    if kinetics==True:
+        Observable('obs_L', L(L_b1=None))
     Observable('obs_R',R(R_b1=None, R_p='p0', R_s='i'))
     Observable('obs_RL',R(R_b1=None, R_p='p0', R_s='a'))
     Observable('obs_Gi',Gi(Gi_b1=None))
