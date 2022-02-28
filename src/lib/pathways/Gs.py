@@ -16,11 +16,15 @@
 
 from pysb import *
 from pysb.macros import *
+from sympy import Piecewise
+from pysb.macros import create_t_obs, drug_binding
 
 
 def network(LR=None, kinetics=True, **kwargs):
 
     defaultKwargs = {
+        'time_in':0,
+        'time_out':0,
         'L_init':0.01,
         'R_init': 2,
         'Golf_init': 2,
@@ -89,9 +93,14 @@ def network(LR=None, kinetics=True, **kwargs):
     }
     parameters={**defaultKwargs, **kwargs}
 
+
     
     #Start a model
     Model()
+
+    ##TIME OBSERVABLE
+    components_time_obs = create_t_obs()
+    time_obs = components_time_obs.t
 
     """IMPORTANT INFO:
         
@@ -146,9 +155,14 @@ def network(LR=None, kinetics=True, **kwargs):
     '''The receptor can bind either the inactive G protein first, and then
     dopamine, or dopamine first and then and then the inactivate G protein.'''
     if kinetics == True:
-        Parameter('RL_kon', parameters['RL_kon'])  # 1/(μM*s) |Association constant of the complex D1R_DA_Golf
-        Parameter('RL_koff', parameters['RL_koff'])    # 1/s      |Dissociation constant of the complex D1R_DA_Golf
-        Rule('reaction1', R(R_b1=None, R_p='p0', R_s='i') + L(L_b1=None) | R(R_b1=None, R_p='p0', R_s='a'), RL_kon, RL_koff)
+        if parameters['time_in'] !=0 and parameters['time_out']!=0:
+            Expression('RL_kon', Piecewise((0, time_obs > parameters['time_out']),(parameters['RL_kon'], time_obs > parameters['time_in']),(0, True)))
+            Parameter('RL_koff', parameters['RL_koff'])    # 1/s      |Dissociation constant of the complex D1R_DA_Golf
+            Rule('reaction1', R(R_b1=None, R_p='p0', R_s='i') + L(L_b1=None) | R(R_b1=None, R_p='p0', R_s='a'), RL_kon, RL_koff)
+        else:
+            Parameter('RL_kon', parameters['RL_kon'])  # 1/(μM*s) |Association constant of the complex D1R_DA_Golf
+            Parameter('RL_koff', parameters['RL_koff'])    # 1/s      |Dissociation constant of the complex D1R_DA_Golf
+            Rule('reaction1', R(R_b1=None, R_p='p0', R_s='i') + L(L_b1=None) | R(R_b1=None, R_p='p0', R_s='a'), RL_kon, RL_koff)
     else: pass
 
     Parameter('RL_Golf_kon', parameters['RL_Golf_kon'])  # 1/(μM*s) |Association constant of the complex D1R_DA_Golf

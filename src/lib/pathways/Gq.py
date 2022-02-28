@@ -16,6 +16,8 @@
 
 from pysb import *
 from pysb.macros import *
+from pysb.macros import create_t_obs, drug_binding
+from sympy import Piecewise
 
 
 __author__ = "Rui Ribeiro"
@@ -33,6 +35,8 @@ USAGE = __doc__.format(__author__, __email__)
 def network(LR=None, kinetics=True, **kwargs):
 
     defaultKwargs = {
+        'time_in':0,
+        'time_out':0,
         'L_init':0,
         'R_init':1.4107,
         'Gq_a_GDP_init':0.0027739,
@@ -76,6 +80,10 @@ def network(LR=None, kinetics=True, **kwargs):
 
     #Start a model
     Model()
+
+    ##TIME OBSERVABLE
+    components_time_obs = create_t_obs()
+    time_obs = components_time_obs.t
 
     """IMPORTANT INFO:
         
@@ -147,9 +155,14 @@ def network(LR=None, kinetics=True, **kwargs):
     ##RULES
 
     if kinetics == True:
-        Parameter('kRL_1', parameters['RL_kon'])  # 1/(μM*s) |Association constant of the complex 
-        Parameter('kRL_2', parameters['RL_koff'])    # 1/s      |Dissociation constant of the complex 
-        Rule('reaction1', R(R_b1=None, R_s='inact') + L(L_b1=None) | R(R_b1=None, R_s='act'), kRL_1, kRL_2)
+        if parameters['time_in'] !=0 and parameters['time_out']!=0:
+            Expression('RL_kon', Piecewise((0, time_obs > parameters['time_out']),(parameters['RL_kon'], time_obs > parameters['time_in']),(0, True)))
+            Parameter('RL_koff', parameters['RL_koff'])    # 1/s      |Dissociation constant of the complex 
+            Rule('reaction1', R(R_b1=None, R_s='inact') + L(L_b1=None) | R(R_b1=None, R_s='act'), RL_kon, RL_koff)
+        else:
+            Parameter('RL_kon', parameters['RL_kon'])  # 1/(μM*s) |Association constant of the complex 
+            Parameter('RL_koff', parameters['RL_koff'])    # 1/s      |Dissociation constant of the complex 
+            Rule('reaction1', R(R_b1=None, R_s='inact') + L(L_b1=None) | R(R_b1=None, R_s='act'), RL_kon, RL_koff)
     else: pass
 
     #G-PROTEIN ACTIVATION

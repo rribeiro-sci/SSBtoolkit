@@ -1,0 +1,38 @@
+﻿Reaction number,Reaction,Forward parameters names,Reverse parameter names,Forward default (1/(nM*s)),Reverse default (1/s)
+1,D1R + DA <-> D1RDA,RL_kon,RL_koff,0.005,5
+3,D1RDA + Golf <-> D1RDAGolf,RL_Golf_kon,RL_Golf_koff,0.003,5
+9,D1RDAGolf -> Gbgolf + D1RDA + GaolfGTP,,RL_Golf_decay,,15
+10,GaolfGTP -> GaolfGDP,,GaolfGTP_decay,,30
+11,GaolfGDP + Gbgolf -> Golf,,Golf_formation,,100
+15,AC5 + GaolfGTP <-> AC5GaolfGTP,AC5_GaolfGTP_kon,AC5_GaolfGTP_koff,0.2,0.1
+16,AC5 + Ca <-> AC5Ca,AC5_Ca_kon,AC5_GaolfGTP_koff,0.001,0.9
+17,AC5Ca + GaolfGTP <-> AC5CaGaolfGTP,AC5_Ca_GaolfGTP_kon,AC5_Ca_GaolfGTP_koff,0.2,0.1
+18,AC5GaolfGTP + ATP <-> [AC5GaolfGTP*ATP],AC5_GaolfGTP_ATP_i_koff,AC5_GaolfGTP_ATP_i_koff,0.00105,1
+19,[AC5GaolfGTP*ATP] -> cAMP + AC5GaolfGTP,,cAMP_formation,,20
+20,cAMP + AC5GaolfGTP -> [AC5GaolfGTP*ATP],,cAMP_reverse,,0.084
+21,AC5 + ATP <-> [AC5*ATP],AC5_ATP_kon,AC5_ATP_koff,0.0001,1
+22,[AC5*ATP] -> cAMP + AC5,,AC5_basal,,1
+23,cAMP + AC5 -> [AC5*ATP],,AC5_reverse_basal,,0.0004
+24,AC5Ca + ATP <-> [AC5Ca*ATP],AC5_Ca_ATP_kon,AC5_Ca_ATP_koff,7.50E-05,1
+25,[AC5Ca*ATP] -> cAMP + AC5Ca,,AC5_Ca_ATP_to_cAMP,,0.5
+26,cAMP + AC5Ca -> [AC5Ca*ATP],,AC5_Ca_ATP_to_cAMP_reverse,,0.00015
+27,GaolfGTP + [AC5*ATP] <-> [AC5GaolfGTP*ATP],AC5_GaolfGTP_ATP_a_koff,AC5_GaolfGTP_ATP_a_koff,0.2,0.1
+28,AC5GaolfGTP -> AC5 + GaolfGDP,,AC5_GaolfGTP_decay,,0.2
+29,[AC5GaolfGTP*ATP] -> [AC5*ATP] + GaolfGDP,,AC5_GaolfGTP_ATP_decay,,0.2
+30,Ca + [AC5*ATP] <-> [AC5Ca*ATP],AC5_ATP_Ca_kon,AC5_ATP_Ca_koff,0.001,0.9
+31,AC5CaGaolfGTP + ATP <-> [AC5CaGaolfGTP*ATP],AC5_Ca_GaolfGTP_ATP_kon,AC5_Ca_GaolfGTP_ATP_koff,0.00055,1
+32,GaolfGTP + [AC5Ca*ATP] <-> [AC5CaGaolfGTP*ATP],AC5_CA_ATP_GaolfGTP_kon,AC5_CA_ATP_GaolfGTP_koff,0.2,0.1
+33,[AC5CaGaolfGTP*ATP] -> cAMP + AC5CaGaolfGTP,,AC5_Ca_GaolfGTP_ATP_to_cAMP,,10
+34,cAMP + AC5CaGaolfGTP -> [AC5CaGaolfGTP*ATP],,AC5_Ca_GaolfGTP_ATP_to_cAMP_reverse,,0.022
+35,AC5CaGaolfGTP -> AC5Ca + GaolfGDP,,AC5_Ca_GaolfGTP_decay,,0.2
+36,[AC5CaGaolfGTP*ATP] -> [AC5Ca*ATP] + GaolfGDP,,AC5_Ca_GaolfGTP_ATP_decay,,0.2
+73,cAMP + PDE4 <-> [PDE4*cAMP],PDE4_cAMP_kon,PDE4_cAMP_koff,0.01,1
+74,[PDE4*cAMP] -> PDE4 + AMP,,PDE4_cAMP_to_AMP,,2
+75,PDE10 + 2 cAMP <-> PDE10c,PDE10_2cAMP_kon,PDE10_2cAMP_koff,1.00E-06,9
+76,cAMP + PDE10 <-> [PDE10*cAMP],PDE10_cAMP_kon,PDE10_cAMP_koff,0.1,2
+77,cAMP + PDE10c <-> [PDE10c*cAMP],PDE10_2cAMP_cAMP_kon,PDE10_2cAMP_cAMP_koff,0.13,2
+78,[PDE10*cAMP] -> PDE10 + AMP,,PDE10_cAMP_decay,,3
+79,[PDE10c*cAMP] -> PDE10c + AMP,,PDE10_2cAMP_cAMP_decay,,10
+80,cAMP + PKA <-> PKAcAMP2,PKA_cAMP2_kon,PKA_cAMP2_koff,0.00026,1
+81,cAMP + PKAcAMP2 <-> PKAcAMP4,PKA_cAMP4_kon,PKA_cAMP4_koff,0.000346,1
+82,PKAcAMP4 <-> PKAc + PKAreg,PKA_activation,PKA_activation_reverse,10,0.01

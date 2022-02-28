@@ -13,3 +13,4 @@ biopython
 pysb
 bionetgen
 bioservices
+qgrid
