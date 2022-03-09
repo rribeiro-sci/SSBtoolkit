@@ -321,11 +321,11 @@ class get:
             self._softwr = 'GROMACS'
             self._prefix = None
             self.citation = '''Estimation of Drug-Target Residence Times by τ-Random Acceleration Molecular Dynamics Simulations
-    Daria B. Kokh, Marta Amaral, Joerg Bomke, Ulrich Grädler, Djordje Musil, Hans-Peter Buchstaller, Matthias K. Dreyer, Matthias Frech, Maryse Lowinski, Francois Vallee, Marc Bianciotto, Alexey Rak, and Rebecca C. Wade
-    Journal of Chemical Theory and Computation 2018 14 (7), 3859-3869
-    DOI: 10.1021/acs.jctc.8b00230 '''
+                                Daria B. Kokh, Marta Amaral, Joerg Bomke, Ulrich Grädler, Djordje Musil, Hans-Peter Buchstaller, Matthias K. Dreyer, Matthias Frech, Maryse Lowinski, Francois Vallee, Marc Bianciotto, Alexey Rak, and Rebecca C. Wade
+                                Journal of Chemical Theory and Computation 2018 14 (7), 3859-3869
+                                DOI: 10.1021/acs.jctc.8b00230 '''
             
-        def run(self, **kwargs):
+        def Run(self, **kwargs):
             """
             Calulates the residence time of a ligand from RAMD simualtions.
 
@@ -1848,6 +1848,11 @@ class simulation:
             fig.update_annotations(font_size=20, font_color='black')
             
             if filename==None: filename='plot.html'
+            else:
+                extension = os.path.splitext(filename)[-1]
+                if ext == '.png': fig.write_image(filename)
+                if ext == '.html': pyoff.plot(fig, filename=filename)
+                else: raise TypeError("extension not valid. Use png or html.")
             if save ==False: return fig
             elif save==True: return pyoff.plot(fig, filename=filename)
             return
