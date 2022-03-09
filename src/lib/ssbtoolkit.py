@@ -1849,7 +1849,7 @@ class simulation:
             
             if filename==None: filename='plot.html'
             else:
-                extension = os.path.splitext(filename)[-1]
+                ext = os.path.splitext(filename)[-1]
                 if ext == '.png': fig.write_image(filename)
                 if ext == '.html': pyoff.plot(fig, filename=filename)
                 else: raise TypeError("extension not valid. Use png or html.")
