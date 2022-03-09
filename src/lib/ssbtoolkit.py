@@ -1677,7 +1677,7 @@ class simulation:
             
             # Update xaxis properties
             fig.update_xaxes(row=2, col=2, showgrid=False, range=[0,3], linecolor='black', linewidth=2, 
-                            tickmode='array', tickvals=[1,2], ticktext=['control', '{}-fold'.format(self.obs_fold)], tickfont=dict(size=18))
+                            tickmode='array', tickvals=[1,2], ticktext=['control', '{}-fold'.format(self._fold)], tickfont=dict(size=18))
 
             fig.update_yaxes(row=2, col=2, showgrid=False, range=[self.pathway_parameters['time_in'],round((max(FWHM_values)+(max(FWHM_values)-self.pathway_parameters['time_in'])*0.5)/5)*5], 
                             title_text='Time (s)', titlefont=dict(size=18), linecolor='black', linewidth=2,
