@@ -23,7 +23,7 @@ Taken as a whole, structural-quantitative systems pharmacology provides an unpre
 
 
 #### Next topic: 
-[The SSB framework explained](/docs/ssb_framework.md)
+[The SSB toolkit explained](/docs/ssb_toolkit.md)
 
 #### Go back to SSBColab git homepage:
-[SSBColab ](https://github.com/rribeiro-dev/SSBColab-shared)
+[SSBtoolkit](https://github.com/rribeiro-sci/SSBtoolkit)
