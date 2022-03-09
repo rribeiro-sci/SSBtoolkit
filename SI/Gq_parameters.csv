@@ -1,6 +1,4 @@
 Parameter,Value,Unit
-time_in,0,s
-time_out,0,s
 Gq_a_GDP_init:0.0027739,uM
 Gq_a_GDP_init:6.4172E-4,uM
 Gq_bg_init:0.0037173,uM

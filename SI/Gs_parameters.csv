@@ -1,6 +1,4 @@
 Parameter,Value,Unit
-time_in,0,s
-time_out,0,s
 L_init,0.01,uM
 R_init,2,uM
 Golf_init,2,uM
