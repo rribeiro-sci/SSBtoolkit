@@ -1,4 +1,4 @@
-# SSBtoolkit Step-by-Step Tutorial
+# SSBtoolkit
 
 <div style="padding-bottom:50px">
 <img src="https://res.cloudinary.com/djz27k5hg/image/upload/v1637335206/logos/Logo_des_Forschungszentrums_J_C3_BClich_seit_2018_hcliq4.svg" width=250 align='left' style="margin-top:40px"/>
@@ -6,14 +6,14 @@
 </div>  
 <br>
 <br><br><br><br><br>
-
-In this tutorial series, you'll learn how to use the SSB (Structure Systems Biology toolkit) to simulate methematical models of signaling pathways of GPCRs.
-The toolkit is designed for non-experts in computational systems biology and it is being continually updated with new SSB features and models.
 <br><br>
 <p align="center"> 
   <img src="./docs/img/SSB_img.png" alt='SSB_img' width="500" >
 </p>
 <br><br>
+In this tutorial series, you'll learn how to use the SSB (Structure Systems Biology toolkit) to simulate methematical models of signaling pathways of GPCRs.
+The toolkit is designed for non-experts in computational systems biology and it is being continually updated with new SSB features and models.
+
 The tutorials covers the core features of the SSBtoolkit python library. You don't need to follow all the tutorials orderly. You can just follow the one that suits your research interests. 
 
 The tutorials are organized as follows:
