@@ -126,7 +126,7 @@ All the three signaling pathways were developed using the [PySB](https://pysb.or
 To predict a dose-response curve from the simulation of signaling pathways, individual simulations of the pathway according to an array of ligand concentrations must be performed first. The dose-response curve is, then, obtained by fitting a logistic regression (eq.4) to the maximum response values from each individual simulation. In the end, a curve of the response in function of the ligand concentration is obtained (Fig.7). The response of a signaling pathway is, naturally, represented by the increase or decrease of one of the species described by the model. Therefore, for each signaling pathway we defined, by default, a reference species. While cAMP was chosen as reference species for the G<sub>s</sub> and G<sub>i/o</sub> pathway, for the G<sub>q/11</sub> pathway we chose IP<sub>3</sub> , Fig.5.
 <br /> <br />
 <figure>
-<img src="./img/fig7.png" alt='equation' width="800" >
+<img src="./img/fig7.png" alt='scheme' width="800" >
 <figcaptation align='center'>Fig. 7 - Conceptual scheme for predicting dose-response through signaling pathways’ simulation. For each concentration value the signaling model is simulated obtaining in the end several curve of the concentration of a specific species of the pathway as function of time. After, the maximum value of each curve is selected and plotted, resulting, in the end, in the dose-response curve.</figcaptation >
 </figure>
 <br /> <br />

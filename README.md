@@ -32,3 +32,26 @@ How to do:
 5. [Exploring SSB pathways associated to disease variants](SSBtoolkit-Tutorial4_OXTR.ipynb)
 
 
+
+
+## Cite Us
+If you use or adapt the SSBtoolkit for your own research projects please cite us.
+
+```
+@article{XXX,
+    title={XXX},
+    author={XXX},
+    publisher={XXX},
+    note={\url{XXX}},
+    year={XXX}
+}
+```
+
+## Acknowledgments
+
+EU Human Brain Project (SGA1 and SGA2): This open source software was developed in part in the Human Brain Project funded from the European Union's Horizon 2020 Framework Programme for Research and Innovation under Specific Grant Agreements No 720270 and No. 78907 (Human Brain Project SGA1 and SGA2).
+
+<div style="padding-bottom:50px">
+<img src="https://res.cloudinary.com/djz27k5hg/image/upload/v1637657234/logos/HBP_horizontal_logo_qtcyzn.png" width="300" align='left' style="margin-left:50px">
+    <img src="https://res.cloudinary.com/djz27k5hg/image/upload/v1642677502/logos/COFUNDED_EU_j2ktlp.jpg" width="300" align='left' style="margin-left:50px">
+</div>  
