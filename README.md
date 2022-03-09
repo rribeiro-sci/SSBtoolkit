@@ -20,7 +20,7 @@ The tutorials are organized as follows:
 
 What is about:
 * [Introduction to Sructure Systems Biology ](/docs/structure_systems_biology.md)
-* [The SSB toolkit explained](/docs/ssb_framework.md)
+* [The SSB toolkit explained](/docs/ssb_toolkit.md)
 
 
 How to do:
