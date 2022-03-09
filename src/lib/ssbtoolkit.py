@@ -1321,151 +1321,6 @@ class simulation:
             df.to_csv(path, index=False)
             return
 
-    
-
-
-            from IPython.core.display import display, HTML
-            display(HTML("<style>.container { width:90% !important; }</style>"))
-
-
-            from plotly.subplots import make_subplots
-            from scipy.signal import peak_widths
-            from sklearn import metrics
-            import plotly.offline as pyoff
-
-
-            half_1 = peak_widths(self._obs_curve_1, self._obs_peaks_1, rel_height=0.5)
-            half_2 = peak_widths(self._obs_curve_2, self._obs_peaks_2, rel_height=0.5)
-            fwhm_1 = self._time[int(half_1[3])]-self._time[int(half_1[2])]
-            fwhm_2 = self._time[int(half_2[3])]-self._time[int(half_2[2])]
-
-
-            fig = make_subplots(rows=2, cols=2,vertical_spacing=0.15,
-                                subplot_titles=("{} concentration".format(self._observable), "Amplitude", "Area under the curve", "Full Width at Half Maximum"))
-
-            ####################
-            #### MAIN PLOT  ####
-            ####################
-            fig.add_trace(go.Scatter(x=self._time, y=self._obs_curve_1*1E3, name='control'), row=1, col=1)
-            fig.add_trace(go.Scatter(x=self._time, y=self._obs_curve_2*1E3, name='{}-fold'.format(self.obs_ratio)), row=1, col=1)
-            fig.add_trace(go.Scatter(x=self._time[self._obs_peaks_1], y=self._obs_curve_1[self._obs_peaks_1]*1E3,
-                                    name='max value', showlegend=False, mode='markers', 
-                                    marker=dict(symbol='x', size=13, color='Black')), row=1,col=1)
-            fig.add_trace(go.Scatter(x=self._time[self._obs_peaks_2], y=self._obs_curve_2[self._obs_peaks_2]*1E3,
-                                    name='max value', showlegend=False, mode='markers', 
-                                    marker=dict(symbol='x', size=13, color='Black')), row=1,col=1)
-            fig.add_shape(type='line', x0=self._time[int(half_1[2])],y0=half_1[1][0]*1E3, x1=self._time[int(half_1[3])], y1=half_1[1][0]*1E3,
-                        line=dict(color='Blue',dash='dash'),xref='x',yref='y', row=1, col=1)
-            fig.add_shape(type='line', x0=self._time[int(half_2[2])],y0=half_2[1][0]*1E3, x1=self._time[int(half_2[3])], y1=half_2[1][0]*1E3,
-                        line=dict(color='Red',dash='dash'),xref='x',yref='y', row=1, col=1)
-
-            # Update xaxis properties
-            fig.update_xaxes(title_text="Time (s)", showgrid=False, row=1, col=1, titlefont=dict(size=18), 
-                            linecolor='black', linewidth=2,
-                            ticks='inside', tickfont=dict(size=18), tickcolor='black', ticklen=10, tickwidth=2)
-
-            fig.update_yaxes(title_text=self._observable+' (nM)', titlefont=dict(size=18), showgrid=False, row=1, col=1, 
-                            linecolor='black', linewidth=2,
-                            ticks='inside', tickfont=dict(size=18), tickcolor='black', ticklen=10, tickwidth=2)
-
-
-            ####################
-            #### AMPLITUDE  ####
-            ####################
-
-            AMP_labels = [1,2]
-            AMP_values = [self._vmax_obs_curve_1, self._vmax_obs_curve_2]
-            fig.add_trace(go.Bar(x=AMP_labels,y=AMP_values, width = [0.35,0.35], showlegend=False, marker_color='black', name=''), row=1, col=2 )
-
-                
-
-            # Update xaxis properties
-            fig.update_xaxes(row=1, col=2, showgrid=False, linecolor='black', linewidth=2, range=[0,3],
-                            tickmode='array', tickvals=[1,2], ticktext=['control', '{}-fold'.format(self.obs_ratio)], tickfont=dict(size=18))
-
-            fig.update_yaxes(showgrid=False, range=[round((min(AMP_values)-min(AMP_values)*0.5)/5)*5,round((max(AMP_values)+max(AMP_values)*0.5)/5)*5 ], row=1, col=2,
-                            title_text=self._observable+' (nM)', titlefont=dict(size=18),
-                            linecolor='black', linewidth=2, ticks='inside', ticklen=10, tickwidth=2, tickfont=dict(size=18))
-
-            # Add diff lines
-            AMP_diffs = [max(AMP_values) - v for v in AMP_values]
-            AMP_diff_labels = dict(zip(AMP_labels, AMP_diffs))
-            fig.add_trace(go.Scatter(name='',x=[1,1.5,2], y=[max(AMP_values)+(max(AMP_values)*0.3)]*3, mode = 'lines+text',showlegend=False, line=dict(color='black', width=1),text=['', 'diff. = {} nM'.format(round(AMP_diffs[0], 3)),''], textposition='top center'), row=1, col=2)
-            fig.add_trace(go.Scatter(name='',x=[AMP_labels[0]-0.175, AMP_labels[0]+0.175], y=[AMP_values[0]+(AMP_values[0]*0.03)]*2, mode = 'lines',showlegend=False, line=dict(color='black', width=1)), row=1, col=2)
-            fig.add_trace(go.Scatter(name='',x=[AMP_labels[1]-0.175, AMP_labels[1]+0.175], y=[AMP_values[1]+(AMP_values[1]*0.03)]*2, mode = 'lines',showlegend=False, line=dict(color='black', width=1)), row=1, col=2)
-            fig.add_trace(go.Scatter(name='',x=[AMP_labels[0], AMP_labels[0]], y=[AMP_values[0]+(AMP_values[0]*0.03), max(AMP_values)+(max(AMP_values)*0.3)], mode = 'lines',showlegend=False, line=dict(color='black', width=1)), row=1, col=2)
-            fig.add_trace(go.Scatter(name='',x=[AMP_labels[1], AMP_labels[1]], y=[AMP_values[1]+(AMP_values[1]*0.03), max(AMP_values)+(max(AMP_values)*0.3)], mode = 'lines',showlegend=False, line=dict(color='black', width=1)), row=1, col=2)
-            
-
-            ####################
-            ####     AUC    ####
-            ####################
-
-            # Data
-            AUC_labels = [1,2]
-            AUC_values = [round(metrics.auc(self._time, self._obs_curve_1),2), round(metrics.auc(self._time, self._obs_curve_2),2)]
-            fig.add_trace(go.Bar(x=AUC_labels,y=AUC_values, width = [0.35,0.35], showlegend=False, marker_color='black', name=''), row=2, col=1 )
-                    
-            # Update xaxis properties
-            fig.update_xaxes(row=2, col=1, tickmode='array', showgrid=False, range=[0,3], linecolor='black', linewidth=2,
-                            tickvals=[1,2], ticktext=['control', '{}-fold'.format(self.obs_ratio)], tickfont=dict(size=18))
-
-            fig.update_yaxes(row=2, col=1,showgrid=False,  title_text=self._observable+' (nM)', range=[round((min(AUC_values)-min(AUC_values)*0.5)/5)*5,round((max(AUC_values)+max(AUC_values)*0.5)/5)*5], 
-                            titlefont=dict(size=18),linecolor='black', linewidth=2, 
-                            ticks='inside', tickfont=dict(size=18),ticklen=10, tickwidth=2)
-
-            # Add diff lines
-            AUC_diffs = [max(AUC_values) - v for v in AUC_values]
-            AUC_diff_labels = dict(zip(AUC_labels, AUC_diffs))
-            fig.add_trace(go.Scatter(name='',x=[1,1.5,2], y=[max(AUC_values)+(max(AUC_values)*0.3)]*3, mode = 'lines+text',showlegend=False, 
-                                    line=dict(color='black', width=1), text=['', 'diff. = {} nM'.format(round(AUC_diffs[0], 3)),''], textposition='top center'), row=2, col=1)
-            fig.add_trace(go.Scatter(name='',x=[AUC_labels[0]-0.175, AUC_labels[0]+0.175], y=[AUC_values[0]+(AUC_values[0]*0.03)]*2, mode = 'lines',showlegend=False, line=dict(color='black', width=1)), row=2, col=1)
-            fig.add_trace(go.Scatter(name='',x=[AUC_labels[1]-0.175, AUC_labels[1]+0.175], y=[AUC_values[1]+(AUC_values[1]*0.03)]*2, mode = 'lines',showlegend=False, line=dict(color='black', width=1)), row=2, col=1)
-            fig.add_trace(go.Scatter(name='',x=[AUC_labels[0], AUC_labels[0]], y=[AUC_values[0]+(AUC_values[0]*0.03), max(AUC_values)+(max(AUC_values)*0.3)], mode = 'lines',showlegend=False, line=dict(color='black', width=1)), row=2, col=1)
-            fig.add_trace(go.Scatter(name='',x=[AUC_labels[1], AUC_labels[1]], y=[AUC_values[1]+(AUC_values[1]*0.03), max(AUC_values)+(max(AUC_values)*0.3)], mode = 'lines',showlegend=False, line=dict(color='black', width=1)), row=2, col=1)
-
-
-            ####################
-            ####    FWHM    ####
-            ####################
-            # Data
-            FWHM_labels = [1,2]
-            FWHM_values = [fwhm_1, fwhm_2]
-            fig.add_trace(go.Bar(x=FWHM_labels,y=FWHM_values, width = [0.35,0.35], showlegend=False,marker_color='black', name=''), row=2, col=2 )
-            
-            # Update xaxis properties
-            fig.update_xaxes(row=2, col=2, showgrid=False, range=[0,3], linecolor='black', linewidth=2, 
-                            tickmode='array', tickvals=[1,2], ticktext=['control', '{}-fold'.format(self.obs_ratio)], tickfont=dict(size=18))
-
-            fig.update_yaxes(row=2, col=2, showgrid=False, range=[self.pathway_parameters['time_in'],round((max(FWHM_values)+(max(FWHM_values)-self.pathway_parameters['time_in'])*0.5)/5)*5], 
-                            title_text='Time (s)', titlefont=dict(size=18), linecolor='black', linewidth=2,
-                            ticks='inside', ticklen=10, tickwidth=2, tickfont=dict(size=18))
-
-            # Add diff lines
-            FWHM_diffs = [max(FWHM_values) - v for v in FWHM_values]
-            FWHM_diff_labels = dict(zip(FWHM_labels, FWHM_diffs))
-            line_height = max(FWHM_values)+((max(FWHM_values)-self.pathway_parameters['time_in'])*0.30)
-            fig.add_trace(go.Scatter(x=[1,1.5,2], y=[line_height]*3, mode = 'lines+text',showlegend=False, line=dict(color='black', width=1),name='',
-                                    text=['', 'diff. = {} s'.format(round(FWHM_diffs[0], 3)),''], textposition='top center'), row=2, col=2)
-            fig.add_trace(go.Scatter(name='',x=[FWHM_labels[0]-0.175, FWHM_labels[0]+0.175], y=[FWHM_values[0]+(FWHM_values[0]*0.005)]*2, mode = 'lines',showlegend=False, line=dict(color='black', width=1)), row=2, col=2)
-            fig.add_trace(go.Scatter(name='',x=[FWHM_labels[1]-0.175, FWHM_labels[1]+0.175], y=[FWHM_values[1]+(FWHM_values[1]*0.005)]*2, mode = 'lines',showlegend=False, line=dict(color='black', width=1)), row=2, col=2)
-            fig.add_trace(go.Scatter(name='',x=[FWHM_labels[0], FWHM_labels[0]], y=[FWHM_values[0]+(FWHM_values[0]*0.005), line_height], mode = 'lines',showlegend=False, line=dict(color='black', width=1)), row=2, col=2)
-            fig.add_trace(go.Scatter(name='',x=[FWHM_labels[1], FWHM_labels[1]], y=[FWHM_values[1]+(FWHM_values[1]*0.005), line_height], mode = 'lines',showlegend=False, line=dict(color='black', width=1)), row=2, col=2)
-
-
-            ####################
-            ####   FIGURE   ####
-            ####################
-
-            fig.update_layout(height=1200, width=1300, title_text="", plot_bgcolor='white',showlegend=True, 
-                            legend=dict(yanchor="top", x=0.3, y=.99,font=dict(family="sans-serif", size=14,color="black")))
-            fig.update_annotations(font_size=20, font_color='black')
-            
-            if filename==None: filename='plot.html'
-            if save ==False: return fig
-            elif save==True: return pyoff.plot(fig, filename=filename)
-            return
-
     class fitModel:
         """
         Fit a model to experimental data
@@ -1642,7 +1497,8 @@ class simulation:
                 if self.obs_ratio == self._expratio:
                     self._lst_ratio.append(self.obs_ratio)
                     self._lst_seed.append(self._seed)
-                    print('\n\nDONE!\n', '\nRatio: '+str(self.obs_ratio), '\nFOLD: '+str(round(self._seed, abs(decimal.Decimal(str(self._expratio).rstrip('0')).as_tuple().exponent))), '\nNumber of iterations: '+str(self._iteration))
+                    self._fold=round(self._seed, abs(decimal.Decimal(str(self._expratio).rstrip('0')).as_tuple().exponent))
+                    print('\n\nDONE!\n', '\nRatio: '+str(self.obs_ratio), '\nFOLD: '+str(self._fold), '\nNumber of iterations: '+str(self._iteration))
                     break
                 elif self.obs_ratio < self._expratio:
                     
@@ -1733,7 +1589,7 @@ class simulation:
             #### MAIN PLOT  ####
             ####################
             fig.add_trace(go.Scatter(x=self._time, y=self._obs_curve_1*1E3, name='control'), row=1, col=1)
-            fig.add_trace(go.Scatter(x=self._time, y=self._obs_curve_2*1E3, name='{}-fold'.format(self.obs_ratio)), row=1, col=1)
+            fig.add_trace(go.Scatter(x=self._time, y=self._obs_curve_2*1E3, name='{}-fold'.format(self._fold)), row=1, col=1)
             fig.add_trace(go.Scatter(x=self._time[self._obs_peaks_1], y=self._obs_curve_1[self._obs_peaks_1]*1E3,
                                     name='max value', showlegend=False, mode='markers', 
                                     marker=dict(symbol='x', size=13, color='Black')), row=1,col=1)
@@ -1767,7 +1623,7 @@ class simulation:
 
             # Update xaxis properties
             fig.update_xaxes(row=1, col=2, showgrid=False, linecolor='black', linewidth=2, range=[0,3],
-                            tickmode='array', tickvals=[1,2], ticktext=['control', '{}-fold'.format(self.obs_ratio)], tickfont=dict(size=18))
+                            tickmode='array', tickvals=[1,2], ticktext=['control', '{}-fold'.format(self._fold)], tickfont=dict(size=18))
 
             fig.update_yaxes(showgrid=False, range=[round((min(AMP_values)-min(AMP_values)*0.5)/5)*5,round((max(AMP_values)+max(AMP_values)*0.5)/5)*5 ], row=1, col=2,
                             title_text=self._observable+' (nM)', titlefont=dict(size=18),
@@ -1794,7 +1650,7 @@ class simulation:
                     
             # Update xaxis properties
             fig.update_xaxes(row=2, col=1, tickmode='array', showgrid=False, range=[0,3], linecolor='black', linewidth=2,
-                            tickvals=[1,2], ticktext=['control', '{}-fold'.format(self.obs_ratio)], tickfont=dict(size=18))
+                            tickvals=[1,2], ticktext=['control', '{}-fold'.format(self._fold)], tickfont=dict(size=18))
 
             fig.update_yaxes(row=2, col=1,showgrid=False,  title_text=self._observable+' (nM)', range=[round((min(AUC_values)-min(AUC_values)*0.5)/5)*5,round((max(AUC_values)+max(AUC_values)*0.5)/5)*5], 
                             titlefont=dict(size=18),linecolor='black', linewidth=2, 
@@ -1821,7 +1677,7 @@ class simulation:
             
             # Update xaxis properties
             fig.update_xaxes(row=2, col=2, showgrid=False, range=[0,3], linecolor='black', linewidth=2, 
-                            tickmode='array', tickvals=[1,2], ticktext=['control', '{}-fold'.format(self.obs_ratio)], tickfont=dict(size=18))
+                            tickmode='array', tickvals=[1,2], ticktext=['control', '{}-fold'.format(self.obs_fold)], tickfont=dict(size=18))
 
             fig.update_yaxes(row=2, col=2, showgrid=False, range=[self.pathway_parameters['time_in'],round((max(FWHM_values)+(max(FWHM_values)-self.pathway_parameters['time_in'])*0.5)/5)*5], 
                             title_text='Time (s)', titlefont=dict(size=18), linecolor='black', linewidth=2,
@@ -1851,7 +1707,7 @@ class simulation:
             else:
                 ext = os.path.splitext(filename)[-1]
                 if ext == '.png': fig.write_image(filename)
-                if ext == '.html': pyoff.plot(fig, filename=filename)
+                elif ext == '.html': pyoff.plot(fig, filename=filename)
                 else: raise TypeError("extension not valid. Use png or html.")
             if save ==False: return fig
             elif save==True: return pyoff.plot(fig, filename=filename)
