@@ -1,5 +1,5 @@
 # SSBColab Documentation
-<img src="https://upload.wikimedia.org/wikipedia/de/thumb/8/8b/J%C3%BClich_fz_logo.svg/800px-J%C3%BClich_fz_logo.svg.png" height="50"><span>              </span><img src="https://www.fzi.de/fileadmin/user_upload/HBP_Primary_RGB_BlackText_Kopie.png" height="50">
+<img src="https://res.cloudinary.com/djz27k5hg/image/upload/v1637335206/logos/Logo_des_Forschungszentrums_J_C3_BClich_seit_2018_hcliq4.svg" height="50"><span>              </span><img src="https://res.cloudinary.com/djz27k5hg/image/upload/v1637657234/logos/HBP_horizontal_logo_qtcyzn.png" height="50">
 <br>
 <br>
 

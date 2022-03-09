@@ -21,14 +21,14 @@ The tutorials are organized as follows:
 What is about:
 * [Introduction to Sructure Systems Biology ](/docs/structure_systems_biology.md)
 * [The SSB toolkit explained](/docs/ssb_framework.md)
-* [The SSB toolkit code](/docs/ssb_code.md) (Working on progress)
+
 
 How to do:
 
-1. [Prediction of dose-responses curves from affinity values (Agonists)](SSBtoolkit-Tutorial1.ipynb) 
-2. [Prediction of dose-responses curves from affinity values (Antagonists)](SSBtoolkit-Tutorial2.ipynb)
-3. [Prediction of dose-responses curves exploring kenetic values](SSBtoolkit-Tutorial3.ipynb)
-4. [Exploring the concentration of signaling species](SSBtoolkit-Tutorial4.ipynb) (Working on progress)
-5. [The OXTR pathaway - case study](SSBtoolkit-OXTR.ipynb)
+1. [Simulation of dose-responses curves from affinity values](SSBtoolkit-Tutorial1.ipynb) 
+2. [Simulation of dose-responses curves of antagonists](SSBtoolkit-Tutorial2.ipynb)
+3. [Simulation of dose-responses curves from kenetic values](SSBtoolkit-Tutorial3A.ipynb)
+4. [Simulation of dose-response cruves from data acquired with tauRAMD ](SSBtoolkit-Tutorial3B_tauRAMD.ipynb)
+5. [Exploring SSB pathways associated to disease variants](SSBtoolkit-Tutorial4_OXTR.ipynb)
 
 
