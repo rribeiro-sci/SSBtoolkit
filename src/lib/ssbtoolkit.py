@@ -408,6 +408,15 @@ class get:
             plt.yticks(np.linspace(0,int(ymax),min(int(ymax)+1,11)), fontsize=9)
             plt.ylabel('residence time [ns]', fontsize=10)
             plt.title("Residence times for "+str(len(self._files))+" replicas, mean: "+str(self._RTmean)+"  std: "+str(self._RTstd),fontsize=12)
+            if save==True:
+                if filename==None: 
+                    filename='plot.png'
+                    plt.savefig(filename, dpi=300)
+                else:
+                    ext = os.path.splitext(filename)[-1]
+                    if ext == '.png': plt.savefig(filename, dpi=300)
+                    else: raise TypeError("extension not valid. Use png")
+            
             return
             
         def plotRTstats(self,save=False, filename=None):
@@ -492,7 +501,17 @@ class get:
                 ax2.plot([np.log10(mu),np.log10(mu)],[0, 1], color='red', alpha = 0.5)
                 KS = np.round(np.max(np.abs(1-np.exp(-(np.asarray(hist_center))/mu) - CD)),2)
                 plt.title("KS test:"+str(KS),fontsize=12)
-
+            
+            
+            if save==True:
+                if filename==None: 
+                    filename='plot.png'
+                    plt.savefig(filename, dpi=300)
+                else:
+                    ext = os.path.splitext(filename)[-1]
+                    if ext == '.png': plt.savefig(filename, dpi=300)
+                    else: raise TypeError("extension not valid. Use png")
+            
             return
     
 class binding:
@@ -887,7 +906,7 @@ class simulation:
             self.processed_data=dose
             return 
 
-        def Curve(self):
+        def Curve(self, save=False, filename=None):
             '''
             Plots the dose-response curve
             '''
@@ -896,6 +915,7 @@ class simulation:
 
             import plotly
             import plotly.graph_objs as go
+            import plotly.offline as pyoff
 
             colors = plotly.colors.DEFAULT_PLOTLY_COLORS
 
@@ -949,7 +969,18 @@ class simulation:
 
             fig = go.Figure(data=plot_data, layout=layout)
             #fig['layout']['yaxis'].update(autorange = True)
-            return fig
+
+            if save==True:
+                if filename==None: 
+                    filename='plot.html'
+                    return pyoff.plot(fig, filename=filename)
+                else:
+                    ext = os.path.splitext(filename)[-1]
+                    if ext == '.png': fig.write_image(filename, scale=3)
+                    elif ext == '.html': pyoff.plot(fig, filename=filename)
+                    else: raise TypeError("extension not valid. Use png or html.")
+            elif save ==False: return fig
+            return 
             
         def Potency(self):
             '''
@@ -1204,7 +1235,7 @@ class simulation:
             self.processed_data=dose
             return 
 
-        def Curve(self):
+        def Curve(self, save=False, filename=None):
             '''
             Plots the dose-response curve
             '''
@@ -1213,6 +1244,7 @@ class simulation:
 
             import plotly
             import plotly.graph_objs as go
+            import plotly.offline as pyoff
 
             colors = plotly.colors.DEFAULT_PLOTLY_COLORS
 
@@ -1265,7 +1297,17 @@ class simulation:
                             )
 
             fig = go.Figure(data=plot_data, layout=layout)
-            return fig
+            if save==True:
+                if filename==None: 
+                    filename='plot.html'
+                    return pyoff.plot(fig, filename=filename)
+                else:
+                    ext = os.path.splitext(filename)[-1]
+                    if ext == '.png': fig.write_image(filename, scale=3)
+                    elif ext == '.html': pyoff.plot(fig, filename=filename)
+                    else: raise TypeError("extension not valid. Use png or html.")
+            elif save ==False: return fig
+            return 
 
         def constants(self):
             '''
@@ -1703,13 +1745,16 @@ class simulation:
                             legend=dict(yanchor="top", x=0.3, y=.99,font=dict(family="sans-serif", size=14,color="black")))
             fig.update_annotations(font_size=20, font_color='black')
             
-            if filename==None: filename='plot.html'
-            else:
-                ext = os.path.splitext(filename)[-1]
-                if ext == '.png': fig.write_image(filename)
-                elif ext == '.html': pyoff.plot(fig, filename=filename)
-                else: raise TypeError("extension not valid. Use png or html.")
-            if save ==False: return fig
-            elif save==True: return pyoff.plot(fig, filename=filename)
+            if save==True:
+                if filename==None: 
+                    filename='plot.html'
+                    return pyoff.plot(fig, filename=filename)
+                else:
+                    ext = os.path.splitext(filename)[-1]
+                    if ext == '.png': fig.write_image(filename, scale=3)
+                    elif ext == '.html': pyoff.plot(fig, filename=filename)
+                    else: raise TypeError("extension not valid. Use png or html.")
+            elif save ==False: return fig
+            
             return
 
