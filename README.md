@@ -25,10 +25,10 @@ What is about:
 
 How to do:
 
-1. [Simulation of dose-responses curves from affinity values](SSBtoolkit-Tutorial1.ipynb) 
-2. [Simulation of dose-responses curves of antagonists](SSBtoolkit-Tutorial2.ipynb)
-3. [Simulation of dose-responses curves from kenetic values](SSBtoolkit-Tutorial3A.ipynb)
-4. [Simulation of dose-response cruves from data acquired with tauRAMD ](SSBtoolkit-Tutorial3B-tauRAMD.ipynb)
+1. [Simulation of dose-response curves of agonists using affinity values](SSBtoolkit-Tutorial1.ipynb) 
+2. [Simulation of dose-response curves of antagonists using affinity values](SSBtoolkit-Tutorial2.ipynb)
+3. [Simulation of dose-response curves of agonists using kenetic values](SSBtoolkit-Tutorial3A.ipynb)
+4. [Simulation of dose-response curves of agonists using data acquired with tauRAMD](SSBtoolkit-Tutorial3B-tauRAMD.ipynb)
 5. [Exploring SSB pathways associated to disease variants](SSBtoolkit-Tutorial4-OXTR.ipynb)
 
 
