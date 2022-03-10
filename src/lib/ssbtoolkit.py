@@ -1559,10 +1559,11 @@ class simulation:
     
             return
 
-        def plotIterations(self):
+        def plotIterations(self, save=False, filename=None):
             '''
             Plots iterations 
             '''
+            import plotly.offline as pyoff
             #dependencies
             if self._iteration == None: raise TypeError('Simulation data not exist. simulation.fitModel.run() must be run first.')
 
@@ -1598,6 +1599,16 @@ class simulation:
                 )
 
             fig = go.Figure(data=[trace], layout=layout)
+            if save==True:
+                if filename==None: 
+                    filename='plot.html'
+                    return pyoff.plot(fig, filename=filename)
+                else:
+                    ext = os.path.splitext(filename)[-1]
+                    if ext == '.png': fig.write_image(filename, scale=3)
+                    elif ext == '.html': pyoff.plot(fig, filename=filename)
+                    else: raise TypeError("extension not valid. Use png or html.")
+            elif save ==False: return fig
             return fig
 
         def plotCurves(self, save=False, filename=None):
