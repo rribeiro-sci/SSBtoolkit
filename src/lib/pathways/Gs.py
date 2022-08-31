@@ -92,9 +92,7 @@ def network(LR=None, kinetics=True, **kwargs):
         'PKA_activation_reverse': 0.01
     }
     parameters={**defaultKwargs, **kwargs}
-
-
-    
+ 
     #Start a model
     Model()
 

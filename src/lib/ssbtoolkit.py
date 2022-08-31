@@ -22,33 +22,20 @@ __email__ = "rui.ribeiro@univr.it"
 from re import sub
 import sys
 import os
-#import csv
-#import time
-#import json
-#import subprocess
 import importlib
 import urllib.request   as urllib
 from glob               import glob
-#from xml.dom            import minidom
-#from urllib.request     import urlopen
-
-#Paralleling
-#import multiprocessing as mp
 
 #Scientific Libraries
-import math
+#import math
 import numpy  as np
 import pandas as pd
-import qgrid 
 from pandas.core import construction
-#from pysb.core import ConstantExpressionError
-#from scipy.optimize.zeros import CONVERGED
-#from scipy.spatial    import distance
 from scipy.optimize   import curve_fit, minimize
+from sklearn.preprocessing import minmax_scale
 
 #Plotting Libraries
 import plotly.graph_objs as go
-#import plotly.io         as pio
 import pylab             as pl
 from matplotlib import *
 
@@ -57,7 +44,8 @@ from pysb import *
 from pysb.macros import *
 from pysb.simulator import ScipyOdeSimulator
 
-
+#Layout libraries
+import qgrid 
 
 #directories (problem with sphinx)
 abs_path=(os.path.join(os.path.split(os.getcwd())[0], 'src/lib'))
@@ -71,9 +59,8 @@ except:
 
 
 import warnings
-warnings.simplefilter(action='ignore', category=FutureWarning)
+warnings.simplefilter(action='ignore')
 
-from sklearn.preprocessing import minmax_scale
 
 
 
