@@ -13,5 +13,5 @@ biopython
 pysb
 bionetgen
 bioservices
-qgrid
+qgrid==1.3.0
 kaleido
