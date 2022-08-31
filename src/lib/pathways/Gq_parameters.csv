@@ -36,5 +36,7 @@ PLCb_Ca_koff,1.00,s-1
 PLCb_Ca_Gq_a_GTP_kon,25.2,uM-1*s-1
 PLCb_Ca_Gq_a_GTP_koff,1.00,s-1
 DAG_decay,0.15,s-1
-
+PIP2_Gq_a_GTP_PLCb_Ca_k,(48.0 * [PIP2])/(5.00 + [PIP2])),DO NOT CHANGE
+PIP2_PLCb_Ca_k,(10.0 * [PIP2])/(40.13 + [PIP2])),DO NOT CHANGE
+IP3_deg_k,(0.14*([IP3] - [IP3_init]))/[IP3]),DO NOT CHANGE
 

@@ -15,15 +15,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-This program is a collection of utilities necessary to perform the QSP calculations
-"""
 __author__ = "Rui Ribeiro"
 __email__ = "rui.ribeiro@univr.it"
 
 #system libraries
 from re import sub
-#import sys
+import sys
 import os
 #import csv
 #import time
@@ -62,9 +59,15 @@ from pysb.simulator import ScipyOdeSimulator
 
 
 
-#direcotires
-from src.lib.directories import *
-#from src.lib.autogrids.auto_grids import auto_grids
+#directories (problem with sphinx)
+abs_path=(os.path.join(os.path.split(os.getcwd())[0], 'src/lib'))
+sys.path.insert(0, os.path.abspath(abs_path))
+try:
+    from src.lib.directories import *
+    from src.lib.utils import utils
+except:
+    from directories import *
+    from utils import *
 
 
 import warnings
@@ -78,119 +81,8 @@ from sklearn.preprocessing import minmax_scale
 HuTRdb_path = os.path.join(os.getcwd(),'SSBtoolkit/src/databases/HuTRdb.sqlite3')
 
 
-class sharedfunctions:
-    def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
-        """
-        Call in a loop to create terminal progress bar
-               
-        :parameter iteration:Required: current iteration (Int)
-        :parameter total:    Required: total iterations (Int)
-        :parameter prefix:   Optional: prefix string (Str)
-        :parameter suffix:   Optional: suffix string (Str)
-        :parameter decimals: Optional: positive number of decimals in percent complete (Int)
-        :parameter length:   Optional: character length of bar (Int)
-        :parameter fill:     Optional: bar fill character (Str)
-        :parameter printEnd: Optional: end character (Str)
-        """
-        percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
-        filledLength = int(length * iteration // total)
-        bar = fill * filledLength + '-' * (length - filledLength)
-        print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
-        # Print New Line on Complete
-        if iteration == total:
-            print()
-
-    def LR_eq_conc(receptor_conc, agonist_conc, antagonist_conc, pkd_agonist, pkd_antagonist):
-        """
-        This function calculates the fraction of occupited receptors at equilibrium.
-        
-        :parameter receptor_conc: Required (int): concentration of the receptor
-        :parameter agonists_conc: Required (int): concentration of the agonist
-        :parameter antagonists_conc: Required (int): concentration of the antagonists (0 if antagonist shoul not be considered)
-        :parameter pkd_agonist: Required (int): pKd of agonist
-        :parameter pkd_antagonist: Required (int): pKd of antagonists (if antagonist shoul not be considered)
-        :return int: fraction of occupied receptors in the equilibrium
-        
-        """
-
-        #from pKd to Kd
-        kd_anatagonist = (10**(-(float(pkd_antagonist)))) * 10**6
-
-        if pkd_antagonist == 0:
-            kd_agonist = ((10**(-(float(pkd_agonist)))) * 10**6)
-        else:
-            kd_agonist = ((10**(-(float(pkd_agonist)))) * 10**6)*(1+(antagonist_conc/kd_anatagonist))
-
-        #LR determination
-        a = 1
-        b = float(agonist_conc)+float(receptor_conc)+kd_agonist
-        c = float(receptor_conc)*float(agonist_conc)
-        delta = (b**2) - (4*a*c)
-        LR = (b-math.sqrt(delta))/(2*a)
-        return LR
-
-    def maxbend(drug_receptor, lig_conc_range):
-        """
-        This function calculates the maximum bending point of a sigmoid-shaped curve according to the mathod of Sebaugh et al., 2003.
-        
-        :parameter drug_receptor: Required (int): concentration of the receptor
-        :parameter lig_conc_range: Required (array): array of a range of ligand concentration
-        :return: int
-        
-        The minimization uses the Nelder-Mead method.
-        """
-
-
-        from scipy.optimize import curve_fit, minimize
-
-
-        def equation_binding(X, Bottom, Top, Kd, p):
-            return Bottom + (Top-Bottom)/(1+np.power((Kd/X),p))
-
-        xfit = np.geomspace(1E-3, 1E4, 50000)
-        popt, pcov = curve_fit(equation_binding, lig_conc_range, drug_receptor, bounds=([np.min(drug_receptor),-np.inf,-np.inf, 0.5],[np.inf,np.max(drug_receptor),np.inf, 2.5]))
-
-
-        def equation_binding_deriv_b(x, a,d,c,b):
-            return (x/c)**b*(a - d)*np.log(x/c)/((x/c)**b + 1)**2
-
-        min_value = minimize(equation_binding_deriv_b, np.max(xfit), args=(popt[0],popt[1],popt[2],popt[3]), method = 'Nelder-Mead')
-
-        submaximal = round(min_value.x[0],3)
-        return submaximal
-
-    def bootstrapp(t, rounds=50000):
-        """
-        This function makes part of implementation of the tRAMD method by Kokh et al., 2018.
-        
-        :parameter t: Required (int): time
-        :parameter rounds: Optional (int): default 50000
-        """
-
-        max_shuffle = rounds
-        alpha = 0.8
-        sub_set = int(alpha*len(t))
-        tau_bootstr = []
-        for i in range(1,max_shuffle):
-            # generate a sub-set
-            np.random.shuffle(t)
-            t_b = t[:sub_set]
-            # find residence time from a sub-stet
-            t_b_sorted_50 =(np.sort(t_b)[int(len(t_b)/2.0-0.5)]+np.sort(t_b)[int(len(t_b)/2)])/2.0
-            tau_bootstr.append(t_b_sorted_50)
-        return(tau_bootstr)
-
-    def ret_time(t):
-        """
-        This function makes part of implementation of the tRAMD method by Kokh et al., 2018.
-        
-        :parameter t: Required (int): time   
-        """
-        t_sorted_50 =(np.sort(t)[int(len(t)/2.0-0.5)]+np.sort(t)[int(len(t)/2)])/2.0
-        tau = t_sorted_50
-        return(tau)
-
 class convert:
+    "Helper functions"
     def microgr2nanomolar(uniprotID, concentration):
         """
         This function converts micrograms of protein in nanomolar. 
@@ -199,20 +91,19 @@ class convert:
         :parameter concentration: Required (int): concentration od protein in micrograms
         :return: (flt) concentration of protein in nM
       
-        This function will obtain the sequence of the protein from UNIPROT and calculate automatically the its molecular mass
+        .. note:: This function will obtain the sequence of the protein from UNIPROT and calculate automatically its molecular mass
         """
 
         from scipy.constants import Avogadro, micro, nano 
         #from Bio.Seq import Seq
         from Bio.SeqUtils import molecular_weight
-        from bioservices import UniProt
-        u = UniProt(verbose=False)
+        
 
         def Da2gr(x):
             return x*1.6605300000013E-24
         
         #Get protein sequence from UniProt
-        seq = u.get_fasta_sequence(uniprotID)
+        seq = utils.FastaSequence(uniprotID)
         
         #Prot MW
         prot_Da = molecular_weight(seq, "protein") #Da (daltons)
@@ -235,7 +126,7 @@ class convert:
 
     def KineticTempScale(kon, koff, T1, T2, Tu='K', *kwargs):
         """
-        This function rescales the kinetics constast for a desired temperature. 
+        This function rescales the kinetics constants to a specific temperature. 
         
         :parameter kon:  Required (flt): foward kinetic constant
         :parameter koff: Required (flt): reverse kinetic constant
@@ -244,7 +135,6 @@ class convert:
         :paramter Tu:    Optional (kwarg str): Temperature Units (kelvin='K', celsius='C')
         :return: (flt, flt)
       
-        This function will obtain the sequence of the protein from UNIPROT and calculate automatically the its molecular mass
         """
         from scipy.constants import R
         from numpy import log
@@ -293,7 +183,7 @@ class get:
         """
         This function query the SSBtoolkit internal database to extract the G protein associated to GPCR. 
         
-        WARNING: it just works for Human GPCRS!
+        .. warning:: it just works for Human GPCRS!
         
         :parameter uniprotID:  Required (str)
         :return: (str)
@@ -312,7 +202,7 @@ class get:
 
     class tauRAMD:
         """
-        This class implements the tRAMD method by Kokh et al., 2018.
+        Implementation of the tRAMD method by Kokh et al., 2018.
         """
 
         def __init__(self):
@@ -365,7 +255,7 @@ class get:
             for t, times in enumerate(self._times_set):
                 if len(times) < 0: raise TypeError('ERROR: empty time values')
                 else:
-                    bt2 = sharedfunctions.bootstrapp(times, rounds=50000)
+                    bt2 = utils.bootstrapp(times, rounds=50000)
                     mu, std = norm.fit(bt2)
                     
                     bins = len(times)
@@ -421,7 +311,7 @@ class get:
             
         def plotRTstats(self,save=False, filename=None):
             """
-            Plots the residence time statisctics
+            Plots the residence time statistics
 
             :parameter save:     Optional (kwarg boolean): default False
             :parameter filename: Optional (kwarg str)
@@ -453,11 +343,11 @@ class get:
                     ax0.plot([min(times), max(times)],[len(times)/2,len(times)/2], color='red', alpha = 0.5, linestyle='dashed',)
                     plt.title("raw CDF",fontsize=12)
                     ax0.set_xlabel('dissociation time [ns]', fontsize=10)
-                    tau = sharedfunctions.ret_time(times)
+                    tau = utils.ret_time(times)
                     ax0.plot([tau,tau],[0,len(times)/2.0], color='red', alpha = 0.5)
                 
                 #Second Row
-                    bt2 = sharedfunctions.bootstrapp(times, rounds=50000)
+                    bt2 = utils.bootstrapp(times, rounds=50000)
                     bins = 6
                     ax1 = fig.add_subplot(gs[1, t])
                     ax1.hist(x=bt2,bins=bins, alpha=0.8,density=True,histtype="step")
@@ -516,7 +406,7 @@ class get:
     
 class binding:
     """
-    This class reproduce ligand-target binding curves.
+    This class simulate ligand-target binding curves.
     """
     def __init__(self):
         self.receptor_conc = None
@@ -526,6 +416,8 @@ class binding:
 
     def bind(self, **kwargs):
         """
+        Applies an function to calculate the fraction of occupited receptors at equilibrium.
+
         :parameter receptor_conc: Required (kwarg flt): concentration of receptor
         :parameter lig_conc_range: Required (kwarg array): array of range of ligand concentration
         :parameter pKd: Required (kwarg flt): pKd value of the ligand
@@ -541,19 +433,19 @@ class binding:
 
         binding_data=[]
         for conc in self._lig_conc_range:
-            binding_data.append(sharedfunctions.LR_eq_conc(self._receptor_conc, conc, 0, self._pKd, 0))
+            binding_data.append(utils.LR_eq_conc(self._receptor_conc, conc, 0, self._pKd, 0))
         self.binding_data=binding_data
         return self.binding_data
 
     def maxbend(self):
         """
-        This function calculates the maximum bending point of a sigmoid-shaped curve according to the mathod of Sebaugh et al., 2003.
+        Calculates the maximum bending point of a sigmoid-shaped curve according to the mathod of Sebaugh et al., 2003.
         
         :parameter drug_receptor: Required (int): concentration of the receptor
         :parameter lig_conc_range: Required (array): array of a range of ligand concentration
         :return: instance .submax_concentration (flt)
         
-        The minimization uses the Nelder-Mead method.
+        .. note:: The minimization uses the Nelder-Mead method.
         """
 
         from scipy.optimize import curve_fit, minimize
@@ -654,26 +546,24 @@ class simulation:
             self._lig_conc_range=None 
             self._ttotal=None 
             self._nsteps=None
-            self._kinetics=True 
-            self._kinetic_parameters=None
+            self._binding_kinetics=True 
+            self._binding_kinetic_parameters=None
             self.simulation_data=None
             self.processed_data=None
 
         def SetSimulationParameters(self, **kwargs):
             """
-            :parameter ligands:         Required (kwargs list): list of ligands' names (str)
-            :parameter affinities:      Required (kwargs list): list of pKd values (flt)
-            :parameter pathway:         Required (kwargs str): name of the pathway ('Gs', 'Gi', 'Gq') 
-            :parameter receptor_conc:   Required (kwargs flt): receptors concentration (nM)
-            :parameter lig_conc_range:  Required (kwargs array): range of ligands' concentration
-            :parameter ttotal:          Required (kwargs int): simulation time (seconds)
-            :parameter nsteps:          Required (kwargs int): simulation time step
-            :parameter kinetics:        Optional (kwargs boolean): default (False)
+            :parameter ligands:          Required (kwargs list): list of ligands' names (str)
+            :parameter affinities:       Required (kwargs list): list of pKd values (flt)
+            :parameter pathway:          Required (kwargs str): name of the pathway ('Gs', 'Gi', 'Gq') 
+            :parameter receptor_conc:    Required (kwargs flt): receptors concentration (nM)
+            :parameter lig_conc_range:   Required (kwargs array): range of ligands' concentration
+            :parameter ttotal:           Required (kwargs int): simulation time (seconds)
+            :parameter nsteps:           Required (kwargs int): simulation time step
+            :parameter binding_kinetics: Optional (kwargs boolean): default (False)
 
-
-            :return instances of all parameters
             
-            Warning: the order of the lists of ligands names and affinities list must be the same. 
+            .. warning:: the order of the lists of ligands names and affinities list must be the same. 
             
             """
             self._ligands= kwargs.pop('ligands')
@@ -684,48 +574,50 @@ class simulation:
             self._lig_conc_range=kwargs.pop('lig_conc_range') 
             self._ttotal=kwargs.pop('ttotal') 
             self._nsteps=kwargs.pop('nsteps')
-            self._kinetics=kwargs.pop('kinetics') 
-            if 'kinetic_parameters' in kwargs:self._kinetic_parameters=kwargs.pop('kinetic_parameters')
-            self._PathwayParametersDataFrame=pd.DataFrame()
+            self._binding_kinetics=kwargs.pop('binding_kinetics') 
+            if 'binding_kinetic_parameters' in kwargs:self._binding_kinetic_parameters=kwargs.pop('binding_kinetic_parameters')
+            self._DefaultPathwayParametersDataFrame=pd.DataFrame()
 
             return 
 
         def PathwayParameters(self):
             """
-            Display table with ddefault pathway parameters
+            Display table with default pathway parameters.
+
+            .. warning:: this functions requires the qgrid library. It doens't work on Google Colab.
             """
-            self._PathwayParametersDataFrame =  pd.read_csv('src/lib/pathways/{}_parameters.csv'.format(self._pathway))
+            self._DefaultPathwayParametersDataFrame =  pd.read_csv('src/lib/pathways/{}_parameters.csv'.format(self._pathway))
 
             col_opts = { 'editable': False, 'sortable':False}
             col_defs = {'Value': { 'editable': True, 'width': 150 }}
-            self._PathwayParametersTable = qgrid.show_grid(self._PathwayParametersDataFrame, column_options=col_opts,column_definitions=col_defs)
-            return self._PathwayParametersTable
+            self._DefaultPathwayParametersTable = qgrid.show_grid(self._DefaultPathwayParametersDataFrame, column_options=col_opts,column_definitions=col_defs)
+            return self._DefaultPathwayParametersTable
 
         def UserPathwayParameters(self, path):
             """
-            Import user pathway parameters
+            Import user pathway parameters.
 
             :parameter path:     Required (kwarg str): directory path
             """
-            self._PathwayParametersDataFrame =  pd.read_csv(path)
+            self._DefaultPathwayParametersDataFrame =  pd.read_csv(path)
             col_opts = { 'editable': False, 'sortable':False}
             col_defs = {'Value': { 'editable': True, 'width': 150 }}
-            self._PathwayParametersTable = qgrid.show_grid(self._PathwayParametersDataFrame, column_options=col_opts,column_definitions=col_defs)
-            return self._PathwayParametersTable
+            self._DefaultPathwayParametersTable = qgrid.show_grid(self._DefaultPathwayParametersDataFrame, column_options=col_opts,column_definitions=col_defs)
+            return self._DefaultPathwayParametersTable
 
         def PathwayParametersToCSV(self, path):
             """
-            Export pathway parameters
+            Export pathway parameters into CSV format.
 
             :parameter path:     Required (kwarg str): directory path
             """
-            self._PathwayParametersTable.get_changed_df().to_csv(path, index=False)
+            self._DefaultPathwayParametersTable.get_changed_df().to_csv(path, index=False)
             print('saved in:', path)
             return 
 
         def Reactions(self):
             """
-            Display pathway reactions
+            Display pathway reactions.
             """
             from IPython.display import display, HTML
             display(HTML("<style>.container {width:90% !important}</style>"))
@@ -739,64 +631,72 @@ class simulation:
             #Check inputs
             if self._ligands==None: raise TypeError("ligands list undefined.")
             elif self._pathway==None: raise TypeError("pathway name undefined.")
-            elif self._kinetics==False and self._affinities==None: raise TypeError("affinity_values_dict undefined.")
-            elif self._kinetics==True and self._affinities==None: pass
+            elif self._binding_kinetics==False and self._affinities==None: raise TypeError("affinity_values_dict undefined.")
+            elif self._binding_kinetics==True and self._affinities==None: pass
             elif self._lig_conc_range.any() == False: raise TypeError("lig_conc_range undefined.")
             elif self._ttotal==None: raise TypeError("ttotal undefined.")
             elif self._nsteps==None: raise TypeError("nsteps undefined.")
             elif self._receptor_conc==None: raise TypeError("receptor_conc undefined.")
-            elif self._kinetics==True and self._kinetic_parameters==None: raise TypeError("Kinetic parameters undefined.")
             else: pass
-
-            if self._kinetics==True and self._PathwayParametersDataFrame.empty and self._kinetic_parameters==None:
-                print('using default pathway parameters.\n\n')
-                self._PathwayParametersDataFrame = pd.read_csv('src/lib/pathways/{}_parameters.csv'.format(self._pathway))
-                self._pathway_parameters = self._PathwayParametersDataFrame.set_index('Parameter').iloc[:,0].to_dict()
             
-            if self._kinetics==True and not self._PathwayParametersDataFrame.empty and self._kinetic_parameters==None:
-                newparameters = self._PathwayParametersTable.get_changed_df()
-                self._pathway_parameters = newparameters.set_index('Parameter').iloc[:,0].to_dict()
-                #convert parameters to a list
-                if isinstance(self._pathway_parameters, list):pass
-                else: self._pathway_parameters=[self._pathway_parameters]
-            if self._kinetic_parameters is not None: 
-                self._pathway_parameters = self._kinetic_parameters
-
+            
             #Check Pathway availability and import it
             available_pathways = ['Gs', 'Gi', 'Gq']
             if self._pathway == 'Gz(Gi)': self._pathway = 'Gi'
             if self._pathway not in available_pathways: raise Exception('Unvailable Pathway. Please, introduce it manually. Pathways available: "Gs", "Gi", "Gq".')
             mypathway = importlib.import_module('.'+self._pathway, package='src.lib.pathways')
+            
+            #Get default pathway parameters            
+            if  self._DefaultPathwayParametersDataFrame.empty and self._binding_kinetic_parameters==None:
+                self._DefaultPathwayParametersDataFrame = pd.read_csv('src/lib/pathways/{}_parameters.csv'.format(self._pathway))
+                self._PathwayParameters = self._DefaultPathwayParametersDataFrame.set_index('Parameter').iloc[:,0].to_dict()
+            
+            elif self._DefaultPathwayParametersDataFrame.empty is False and self._binding_kinetic_parameters is None:
+                try: 
+                    #extract data from qgrid
+                    newparameters = self._DefaultPathwayParametersTable.get_changed_df()
+                    self._PathwayParameters = newparameters.set_index('Parameter').iloc[:,0].to_dict()
+                except:
+                    self._PathwayParameters = self._DefaultPathwayParametersDataFrame.set_index('Parameter').iloc[:,0].to_dict()
+
+            elif self._DefaultPathwayParametersDataFrame.empty and self._binding_kinetic_parameters is not None: 
+                self._DefaultPathwayParametersDataFrame = pd.read_csv('src/lib/pathways/{}_parameters.csv'.format(self._pathway))
+                self._PathwayParameters = {**self._DefaultPathwayParametersDataFrame.set_index('Parameter').iloc[:,0].to_dict(), **self._binding_kinetic_parameters}
+            
+            elif self._DefaultPathwayParametersDataFrame.empty is False and self._binding_kinetic_parameters is not None:
+                try: 
+                    #extract data from qgrid
+                    newparameters = self._DefaultPathwayParametersTable.get_changed_df()
+                    self._PathwayParameters = {**newparameters.set_index('Parameter').iloc[:,0].to_dict(), **self._binding_kinetic_parameters}
+                except:
+                    self._PathwayParameters = {**self._DefaultPathwayParametersDataFrame.set_index('Parameter').iloc[:,0].to_dict(), **self._binding_kinetic_parameters}
 
             #Input
             t = pl.geomspace(0.00001, self._ttotal, num=self._nsteps) # (a,b,c); a is the starting time ; b is the total time simulated ; c is the number of points
-            ix=0
+            
 
             #Output
             simulation_data={}
 
             #Function
             for ligand in self._ligands:
-                
-                sim_data={}
                 ligand_name = os.path.splitext(str(ligand))[0]
                 data=[]
-                sharedfunctions.printProgressBar(0, len(self._lig_conc_range), prefix = "{:<15}".format(ligand_name[:15]), suffix = 'Complete', length = 50)
+                utils.printProgressBar(0, len(self._lig_conc_range), prefix = "{:<15}".format(ligand_name[:15]), suffix = 'Complete', length = 50)
 
                 for idx in range(len(self._lig_conc_range)):
 
                     ligand_conc = self._lig_conc_range[idx]
-                    if self._kinetics == False:
+                    if self._binding_kinetics == False:
                         #get LR conc
-                        parameters={'R_init':self._receptor_conc}
-                        LR_conc_init = sharedfunctions.LR_eq_conc(self._receptor_conc, ligand_conc, 0, self._affinities[self._ligands.index(ligand)], 0)
-                        
+                        parameters = {**self._PathwayParameters, 'R_init':self._receptor_conc}
+                        LR_conc_init = utils.LR_eq_conc(self._receptor_conc, ligand_conc, 0, self._affinities[self._ligands.index(ligand)], 0)
                         mymodel = mypathway.network(LR=LR_conc_init, kinetics=False, **parameters)
                         simres = ScipyOdeSimulator(mymodel, tspan=t, compiler='cython').run()
                         yout = simres.all
-                    elif self._kinetics == True:
-                        myparameters=self._pathway_parameters[ix]
-                        parameters={'R_init':self._receptor_conc, 'L_init':self._lig_conc_range[idx], **myparameters}
+                    
+                    elif self._binding_kinetics == True:
+                        parameters={**self._PathwayParameters,'R_init':self._receptor_conc, 'L_init':self._lig_conc_range[idx] }
                         mymodel = mypathway.network(kinetics=True, **parameters)
                         simres = ScipyOdeSimulator(mymodel, tspan=t, compiler='cython').run()
                         yout = simres.all
@@ -807,8 +707,8 @@ class simulation:
                         d2={mypathway.list_of_observables[idx2]:yout[mypathway.list_of_observables[idx2]]}
                         d1.update(d2)
                     data.append(d1)
-                    sharedfunctions.printProgressBar(idx + 1, len(self._lig_conc_range), prefix = "{:<15}".format(ligand_name[:15]), suffix = 'Complete', length = 50)
-                ix +=1
+                    utils.printProgressBar(idx + 1, len(self._lig_conc_range), prefix = "{:<15}".format(ligand_name[:15]), suffix = 'Complete', length = 50)
+                
 
                 simulation_data[ligand_name] = {'sim_data':data,
                                             'label':ligand_name,}
@@ -817,9 +717,9 @@ class simulation:
 
         def Analysis(self):
             '''
-            This function calculates the dose-response effect
+            This function calculates the dose-response effect.
             
-            :return instance processed_data
+            :return: instance of processed_data
             '''
             
             if self.simulation_data == None: raise TypeError('There is no simulation data. simulation.activation.run() must be run first.')
@@ -908,7 +808,7 @@ class simulation:
 
         def Curve(self, save=False, filename=None):
             '''
-            Plots the dose-response curve
+            Plots the dose-response curve.
             '''
 
             if self.simulation_data == None: raise TypeError('There is no simulation data. simulation.activation.run() must be run first.')
@@ -984,7 +884,7 @@ class simulation:
             
         def Potency(self):
             '''
-            Return the potency values as a pandas DataFrame
+            Return the potency values as a pandas DataFrame.
             '''
             import pandas as pd
             data = simulation.activation.PotencyToDict(self)
@@ -993,7 +893,7 @@ class simulation:
 
         def PotencyToDict(self):
             '''
-            Convert potencies into a dictionary
+            Convert potencies into a dictionary.
             '''
             
             #dependencies
@@ -1010,7 +910,7 @@ class simulation:
            
         def PotencyToCSV(self, path):
             '''
-            Exports the potency values into csv
+            Exports the potency values into csv format.
 
             :parameter path: Required (kwarg str): directory path to save the csv file
             '''
@@ -1022,7 +922,7 @@ class simulation:
    
     class inhibition:
         """
-        Simulation of the inhibition of signaling pathways (i.e. inhibition by antagonists)
+        Simulation of the inhibition of signaling pathways (i.e. inhibition by antagonists).
         """
         def __init__(self):
             self._agonist=None
@@ -1035,8 +935,8 @@ class simulation:
             self._lig_conc_range=None 
             self._ttotal=None 
             self._nsteps=None
-            self._kinetics=True 
-            self._kinetic_parameters=None
+            self._binding_kinetics=False 
+            self._binding_kinetic_parameters=None
             self.simulation_data=None
             self.processed_data=None
 
@@ -1055,9 +955,9 @@ class simulation:
             :parameter kinetics:                Optional (kwargs boolean): default (False)
 
 
-            :return instances of all parameters
+            :return: instances of all parameters
             
-            Warning: the order of the lists of the antagonists names and affinities list must be the same. 
+            .. warning:: the order of the lists of the antagonists names and affinities list must be the same. 
             
             """
             self._agonist= kwargs.pop('agonist')
@@ -1071,13 +971,58 @@ class simulation:
             self._ttotal=kwargs.pop('ttotal') 
             self._nsteps=kwargs.pop('nsteps')
             if 'kinetics' in kwargs: 
-                self._kinetics=kwargs.pop('kinetics') 
-            else: self._kinetics=False
-            if 'kinetic_parameters' in kwargs:
-                self._kinetic_parameters=kwargs.pop('kinetic_parameters')
+                self._binding_kinetics=kwargs.pop('kinetics')
+                if self._binding_kinetics==True: raise TypeError("The of Kinetic parameters during an inhibition simulation it is not supported yet.") 
+            else: self._binding_kinetics=False
+            if 'binding_kinetic_parameters' in kwargs:
+                self._binding_kinetic_parameters=kwargs.pop('binding_kinetic_parameters')
+            self._DefaultPathwayParametersDataFrame=pd.DataFrame()
 
             return 
+
+        def PathwayParameters(self):
+            """
+            Display table with default pathway parameters.
+
+            .. warning:: this functions requires the qgrid library. It doens't work on Google Colab.
+            """
+            self._DefaultPathwayParametersDataFrame =  pd.read_csv('src/lib/pathways/{}_parameters.csv'.format(self._pathway))
+
+            col_opts = { 'editable': False, 'sortable':False}
+            col_defs = {'Value': { 'editable': True, 'width': 150 }}
+            self._DefaultPathwayParametersTable = qgrid.show_grid(self._DefaultPathwayParametersDataFrame, column_options=col_opts,column_definitions=col_defs)
+            return self._DefaultPathwayParametersTable
+
+        def UserPathwayParameters(self, path):
+            """
+            Import user pathway parameters.
+
+            :parameter path:     Required (kwarg str): directory path
+            """
+            self._DefaultPathwayParametersDataFrame =  pd.read_csv(path)
+            col_opts = { 'editable': False, 'sortable':False}
+            col_defs = {'Value': { 'editable': True, 'width': 150 }}
+            self._DefaultPathwayParametersTable = qgrid.show_grid(self._DefaultPathwayParametersDataFrame, column_options=col_opts,column_definitions=col_defs)
+            return self._DefaultPathwayParametersTable
+
+        def PathwayParametersToCSV(self, path):
+            """
+            Export pathway parameters into CSV format.
+
+            :parameter path:     Required (kwarg str): directory path
+            """
+            self._DefaultPathwayParametersTable.get_changed_df().to_csv(path, index=False)
+            print('saved in:', path)
+            return 
         
+        def Reactions(self):
+            """
+            Display pathway reactions.
+            """
+            from IPython.display import display, HTML
+            display(HTML("<style>.container {width:90% !important}</style>"))
+            return pd.read_csv('src/lib/pathways/{}_reactions.csv'.format(self._pathway))
+
         def Run(self):
             '''
             This function runs the pathway simulation and returns the raw simulation data.
@@ -1094,33 +1039,47 @@ class simulation:
             elif self._ttotal==None: raise TypeError("ttotal undefined.")
             elif self._nsteps==None: raise TypeError("nsteps undefined.")
             elif self._receptor_conc==None: raise TypeError("receptor_conc undefined.")
-            elif self._kinetics==True: raise TypeError("The of Kinetic parameters during an inhibition simulation it is not supported yet.")
+            elif self._binding_kinetics==True: raise TypeError("The of Kinetic parameters during an inhibition simulation it is not supported yet.")
             else: pass
 
             #check pathway
             available_pathways = ['Gs', 'Gi', 'Gq']
             if self._pathway == 'Gz(Gi)': self._pathway = 'Gi'
             if self._pathway not in available_pathways: raise Exception('Unvailable Pathway. Please, introduce it manually. Networs available: "Gs", "Gi", "Gq".')
-            
-            #Main function
             mypathway = importlib.import_module('.'+self._pathway, package='src.lib.pathways')
+            
+            #Get default pathway parameters            
+            if  self._DefaultPathwayParametersDataFrame.empty:
+                self._DefaultPathwayParametersDataFrame = pd.read_csv('src/lib/pathways/{}_parameters.csv'.format(self._pathway))
+                self._PathwayParameters = self._DefaultPathwayParametersDataFrame.set_index('Parameter').iloc[:,0].to_dict()
+            
+            elif self._DefaultPathwayParametersDataFrame.empty is False:
+                try: 
+                    #extract data from qgrid
+                    newparameters = self._DefaultPathwayParametersTable.get_changed_df()
+                    self._PathwayParameters = newparameters.set_index('Parameter').iloc[:,0].to_dict()
+                except:
+                    self._PathwayParameters = self._DefaultPathwayParametersDataFrame.set_index('Parameter').iloc[:,0].to_dict()            
+
+            #Input
             t = pl.geomspace(0.00001, self._ttotal, num=self._nsteps) # (a,b,c); a is the starting time ; b is the total time simulated ; c is the number of points
 
+            #Output
             simulation_data={}
-            #agonist_name=os.path.splitext(agonist[0])[0]
+
+            #Function
             for ligand in self._antagonists:
-                sim_data={}
                 ligand_name = os.path.splitext(ligand)[0]
                 data=[]
-                sharedfunctions.printProgressBar(0, len(self._lig_conc_range), prefix = "{:<15}".format(ligand_name[:15]), suffix = 'Complete', length = 50)
+                utils.printProgressBar(0, len(self._lig_conc_range), prefix = "{:<15}".format(ligand_name[:15]), suffix = 'Complete', length = 50)
 
                 for idx in range(len(self._lig_conc_range)):
 
                     ligand_conc = self._lig_conc_range[idx]
 
                     #get LR conc
-                    parameters={'R_init':self._receptor_conc}
-                    LR_conc_init = sharedfunctions.LR_eq_conc(self._receptor_conc, self._agonist_submaximal_conc, ligand_conc, self._agonist_affinity, self._antagonists_affinities[self._antagonists.index(ligand)])
+                    parameters = {**self._PathwayParameters, 'R_init':self._receptor_conc}
+                    LR_conc_init = utils.LR_eq_conc(self._receptor_conc, self._agonist_submaximal_conc, ligand_conc, self._agonist_affinity, self._antagonists_affinities[self._antagonists.index(ligand)])
                     mymodel = mypathway.network(LR=LR_conc_init, kinetics=False, **parameters)
                     simres = ScipyOdeSimulator(mymodel, tspan=t, compiler='cython').run()
                     yout = simres.all
@@ -1131,7 +1090,7 @@ class simulation:
                         d2={mypathway.list_of_observables[idx2]:yout[mypathway.list_of_observables[idx2]]}
                         d1.update(d2)
                     data.append(d1)
-                    sharedfunctions.printProgressBar(idx + 1, len(self._lig_conc_range), prefix = "{:<15}".format(ligand_name[:15]), suffix = 'Complete', length = 50)
+                    utils.printProgressBar(idx + 1, len(self._lig_conc_range), prefix = "{:<15}".format(ligand_name[:15]), suffix = 'Complete', length = 50)
 
                 simulation_data[ligand_name] = {'sim_data':data,
                                             'label':self._agonist+' + ' + ligand_name}
@@ -1141,9 +1100,9 @@ class simulation:
 
         def Analysis(self):
             '''
-            This function calculates the dose-response effect
+            This function calculates the dose-response effect.
             
-            :return instance processed_data
+            :return: instance processed_data
             '''
             #dependencies
             if self.simulation_data == None: raise TypeError('There is no simulation data. simulation.inhibition.run() must be run first.')
@@ -1237,7 +1196,7 @@ class simulation:
 
         def Curve(self, save=False, filename=None):
             '''
-            Plots the dose-response curve
+            Plot the dose-response curve.
             '''
             #dependencies
             if self.processed_data == None: raise TypeError('Simulation data unprocessed. simulation.inhibition.analysis() must be run first.')
@@ -1311,7 +1270,7 @@ class simulation:
 
         def constants(self):
             '''
-            Returns the potency values
+            Returns the potency values.
             '''
 
             #dependencies
@@ -1329,7 +1288,7 @@ class simulation:
 
         def PotencyToDict(self):
             '''
-            Convert potencies into a dictionary
+            Convert potencies into a dictionary.
             '''
             #dependencies
             if self.processed_data == None: raise TypeError('Simulation data unprocessed. simulation.inhibition.analysis() must be run first.')
@@ -1345,7 +1304,7 @@ class simulation:
         
         def Potency(self):
             '''
-            Return the potency values as a pandas DataFrame
+            Return the potency values as a pandas DataFrame.
             '''
             import pandas as pd
             data = simulation.inhibition.PotencyToDict(self)
@@ -1354,7 +1313,7 @@ class simulation:
 
         def PotencyToCSV(self, path):
             '''
-            Exports the potency values into csv
+            Exports the potency values into csv format.
 
             :parameter path: Required (kwarg str): directory path to save the csv file
             '''
@@ -1365,7 +1324,9 @@ class simulation:
 
     class fitModel:
         """
-        Fit a model to experimental data
+        Fit a model to experimental data.
+
+        .. note:: This class was developed to reproduce data from a specific experimental setup. Please see tutorial 4 (OXTR pathay). Use carefully!
         """
         def __init__(self):
         
@@ -1391,14 +1352,14 @@ class simulation:
             :parameter nsteps:             Required (kwargs int): simulation time step
             :parameter observable:         Required (kwargs str): molecular specie to be measured
 
-            :return instances of all parameters
+            :return: instances of all parameters
                         
             """
 
             if 'pathway_parameters' in kwargs: 
                 self.pathway_parameters = kwargs.pop('pathway_parameters')
-                print('pathway_parameters YES')
-
+                #print('pathway_parameters YES')
+            self._DefaultPathwayParametersDataFrame=pd.DataFrame()
             if 'ttotal' in kwargs: 
                 self._ttotal = int(kwargs.pop('ttotal'))
                 print('ttotal =', self._ttotal)
@@ -1424,7 +1385,50 @@ class simulation:
             else: raise TypeError("observable undefined.")
             
             return
-            
+
+        def PathwayParameters(self):
+            """
+            Display table with default pathway parameters.
+
+            .. warning:: this functions requires the qgrid library. It doens't work on Google Colab.
+            """
+            self._DefaultPathwayParametersDataFrame =  pd.read_csv('src/lib/pathways/{}_parameters.csv'.format(self._pathway))
+
+            col_opts = { 'editable': False, 'sortable':False}
+            col_defs = {'Value': { 'editable': True, 'width': 150 }}
+            self._DefaultPathwayParametersTable = qgrid.show_grid(self._DefaultPathwayParametersDataFrame, column_options=col_opts,column_definitions=col_defs)
+            return self._DefaultPathwayParametersTable
+
+        def UserPathwayParameters(self, path):
+            """
+            Import user pathway parameters.
+
+            :parameter path:     Required (kwarg str): directory path
+            """
+            self._DefaultPathwayParametersDataFrame =  pd.read_csv(path)
+            col_opts = { 'editable': False, 'sortable':False}
+            col_defs = {'Value': { 'editable': True, 'width': 150 }}
+            self._DefaultPathwayParametersTable = qgrid.show_grid(self._DefaultPathwayParametersDataFrame, column_options=col_opts,column_definitions=col_defs)
+            return self._DefaultPathwayParametersTable
+
+        def PathwayParametersToCSV(self, path):
+            """
+            Export pathway parameters into CSV format.
+
+            :parameter path:     Required (kwarg str): directory path
+            """
+            self._DefaultPathwayParametersTable.get_changed_df().to_csv(path, index=False)
+            print('saved in:', path)
+            return 
+
+        def Reactions(self):
+            """
+            Display pathway reactions.
+            """
+            from IPython.display import display, HTML
+            display(HTML("<style>.container {width:90% !important}</style>"))
+            return pd.read_csv('src/lib/pathways/{}_reactions.csv'.format(self._pathway))
+          
         def Run(self, **kwargs):
             """
             Fits of the model to experimental data.
@@ -1438,7 +1442,7 @@ class simulation:
                         
             """
 
-            from scipy.signal import chirp, find_peaks, peak_widths
+            from scipy.signal import find_peaks
             import decimal
             #fitting parameters
             if 'expratio' in kwargs: 
@@ -1454,8 +1458,7 @@ class simulation:
             if 'maxiter' in kwargs: 
                 self._maxiter = int(kwargs.pop('maxiter', 100))
                 print('maxiter =', self._maxiter)
-
-                
+    
             if 'seed_incrementor' in kwargs: 
                 self._seed_incrementor = float(kwargs.pop('seed_incrementor', 0.1))
                 print('seed_incrementor =', self._seed_incrementor)
@@ -1469,6 +1472,34 @@ class simulation:
                 print('target_parameter ->', self._target_parameter)
             else: raise TypeError("target_parameter undefined.")
             
+            
+            #Get default pathway parameters            
+            if  self._DefaultPathwayParametersDataFrame.empty and self.pathway_parameters==None:
+                self._DefaultPathwayParametersDataFrame = pd.read_csv('src/lib/pathways/{}_parameters.csv'.format(self._pathway))
+                self._PathwayParameters = self._DefaultPathwayParametersDataFrame.set_index('Parameter').iloc[:,0].to_dict()    
+
+            elif self._DefaultPathwayParametersDataFrame.empty is False and self.pathway_parameters is None:
+                try: 
+                    #extract data from qgrid
+                    newparameters = self._DefaultPathwayParametersTable.get_changed_df()
+                    self._PathwayParameters = newparameters.set_index('Parameter').iloc[:,0].to_dict()
+                except:
+                    self._PathwayParameters = self._DefaultPathwayParametersDataFrame.set_index('Parameter').iloc[:,0].to_dict()
+            
+            elif self._DefaultPathwayParametersDataFrame.empty and self.pathway_parameters is not None: 
+                self._DefaultPathwayParametersDataFrame = pd.read_csv('src/lib/pathways/{}_parameters.csv'.format(self._pathway))
+                self._PathwayParameters = {**self._DefaultPathwayParametersDataFrame.set_index('Parameter').iloc[:,0].to_dict(), **self.pathway_parameters}
+
+            elif self._DefaultPathwayParametersDataFrame.empty is False and self.pathway_parameters is not None:
+                try: 
+                    #extract data from qgrid
+                    newparameters = self._DefaultPathwayParametersTable.get_changed_df()
+                    self._PathwayParameters = {**newparameters.set_index('Parameter').iloc[:,0].to_dict(), **self.pathway_parameters}
+                except:
+                    self._PathwayParameters = {**self._DefaultPathwayParametersDataFrame.set_index('Parameter').iloc[:,0].to_dict(), **self.pathway_parameters}
+
+
+
             #simulation parameters:
             if not self._ttotal: 
                 raise TypeError("simulation parameters unknown. Set the the simulation parameters first wiht set_simulation_parameters()")
@@ -1478,7 +1509,7 @@ class simulation:
             self.simtime = pl.geomspace(0.00001, self._ttotal, num=self._nsteps) 
 
             #Simulation 1
-            pathway_model = mypathway.network(LR=None, kinetics=True, **self.pathway_parameters)
+            pathway_model = mypathway.network(LR=None, kinetics=True, **self._PathwayParameters)
             sim1 = ScipyOdeSimulator(pathway_model, tspan=self.simtime,compiler='cython').run()
             self.simres1 = sim1.all
                                 
@@ -1495,9 +1526,9 @@ class simulation:
                 obs_2  = self.simres2[obs_name]
                 
                 if 'time_in' in self.new_pathway_parameters:
-                    self._time = np.take(self.simtime, np.where(self.simtime > self.new_pathway_parameters['time_in']))[0]
-                    obs_curve_1  = np.take(obs_1,  np.where(self.simtime > self.new_pathway_parameters['time_in']))[0]
-                    obs_curve_2  = np.take(obs_2, np.where(self.simtime > self.new_pathway_parameters['time_in']))[0]
+                    self._time = np.take(self.simtime, np.where(self.simtime > int(self.new_pathway_parameters['time_in'])))[0]
+                    obs_curve_1  = np.take(obs_1,  np.where(self.simtime > int(self.new_pathway_parameters['time_in'])))[0]
+                    obs_curve_2  = np.take(obs_2, np.where(self.simtime > int(self.new_pathway_parameters['time_in'])))[0]
                                 
                 else:
                     self._time = np.take(self.simtime, np.where(self.simtime>0))[0]
@@ -1533,7 +1564,7 @@ class simulation:
                 iteration_n = str(self._iteration)
                 print(f'\r{prefix} {iteration_n}', end='\r')
                 
-                self.new_pathway_parameters={**self.pathway_parameters, **{self._target_parameter:mypathway.defaultParameters[self._target_parameter]*self._seed}}
+                self.new_pathway_parameters={**self._PathwayParameters, **{self._target_parameter:mypathway.defaultParameters[self._target_parameter]*self._seed}}
                 self.obs_ratio = calc_ratio(self)
 
                 if self.obs_ratio == self._expratio:
@@ -1561,7 +1592,7 @@ class simulation:
 
         def plotIterations(self, save=False, filename=None):
             '''
-            Plots iterations 
+            Plot iterations. 
             '''
             import plotly.offline as pyoff
             #dependencies
@@ -1613,7 +1644,7 @@ class simulation:
 
         def plotCurves(self, save=False, filename=None):
             '''
-            Plots the amount of obeservable in function of time, Amplitude, Area Under the Curve, and Full Width at Half Maximum. 
+            Plot the amount of obeservable in function of time, Amplitude, Area Under the Curve, and Full Width at Half Maximum. 
 
             :parameter save:     Optional (kwarg boolean): default False
             :parameter filename: Optional (kwarg str)

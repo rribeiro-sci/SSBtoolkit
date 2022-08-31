@@ -108,6 +108,16 @@ defaultParameters = {
 def network(**kwargs):
 
     parameters={**defaultParameters, **kwargs}
+
+    def myeval(x):
+        try:
+            y = eval(x)
+        except:
+            y=x
+        return y
+
+    parameters = dict(zip(parameters.keys(), map(myeval, parameters.values())))
+
     Model()
 
     ##TIME OBSERVABLE
@@ -170,7 +180,7 @@ def network(**kwargs):
 ################################################################################################################################################################################
     ##RULES
     #Receptor-Ligand
-    Expression('R_L_kf', Piecewise((0, time_obs > parameters['time_out']),(parameters['R_L_kf'], time_obs > parameters['time_in']),(0, True)))
+    Expression('R_L_kf', Piecewise((0, time_obs > float(parameters['time_out'])),(float(parameters['R_L_kf']), time_obs > float(parameters['time_in'])),(0, True)))
     Parameter('R_L_kr', parameters['R_L_kr'])
     Rule('R_L', R(R_b1=None, R_b2=None, R_s='inact') + L(L_b1=None) | R(R_b1=None, R_b2=50, R_s='act')%L(L_b1=50), R_L_kf, R_L_kr)
     Observable('obs_RL', R(R_b1=None, R_b2=50, R_s='act')%L(L_b1=50))

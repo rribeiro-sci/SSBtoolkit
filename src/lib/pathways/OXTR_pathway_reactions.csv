@@ -1,0 +1,24 @@
+Reaction number,Reaction,Forward parameters names,Reverse parameter names,Forward default (1/(uM*s)),Reverse default (1/s)
+1,R + L <-> RL,R_L_kf,R_L_kr
+2,R + Gq <-> R*Gq,R_Gq_trimer_kf,R_Gq_trimer_kr
+3,RL + Gq <-> RLGq,R_L_Gq_trimer_kf,R_L_Gq_trimer_kr
+4,Gq_a + Gq_bg <-> Gq,Gq_trimerization_k,Gq_trimer_split_k
+5,RGq -> R + Gq_a + Gq_bg,,R_L_Gq_trimer_split_k
+6,RGS4 + Gq_a <-> RGS4*Gq_a,RGS4_Gq_a_GTP_kf,RGS4_Gq_a_GTP_kr
+7,RGS4*Gq_a -> RGS4 + Gq_a,,RGS4_Gq_a_GTP_diss_k
+8,Gq_a(GTP) -> Gq_a(GDP),,Gq_a_GTP_decay_k
+9,Gq_a + PLCb <-> Gq_a*PLCb,Gq_a_GTP_PLCb_kf,Gq_a_GTP_PLCb_kr
+10,Gq_a*PLCb + Ca <-> Gq_a*PLCb*Ca,Gq_a_GTP_PLCb_Ca_kf,Gq_a_GTP_PLCb_Ca_kr
+11,Gq_a(GTP)*PLCb*Ca -> Gq_a(GDP) + PLCb*Ca,,Gq_a_GTP_PLCb_Ca_decay_k
+12,PLCb + Ca <-> PLCb*Ca,PLCb_Ca_kf,PLCb_Ca_kr
+13,PLCb*Ca + Gq_a(GTP) <-> Gq_a(GTP)*PLCb*Ca,PLCb_Ca_Gq_a_GTP_kf,PLCb_Ca_Gq_a_GTP_kr
+14,PLCb*Ca -> IP3 + DAG + PLCb*Ca,,PIP2_PLCb_Ca_k 
+15,Gq_a(GTP)*PLCb*Ca -> IP3 + DAG + Gq_a(GTP)*PLCb*Ca,,PIP2_Gq_a_GTP_PLCb_Ca_k 
+16,IP3 -> None,,IP3_deg_k
+17,DAG -> None,,DAG_deg_k
+18,IP3R + IP3 <-> IP3R*IP3,IP3R_IP3_kf,IPR3_IP3_kr
+19,IP3R + Ca <-> IP3R*Ca,IP3R_Ca_kf,IPR3_Ca_kr
+20,IP3R*IP3 + Ca <-> IP3R*IP3*Ca,IP3R_IP3_Ca_kf,IPR3_IP3_Ca_kr
+21,IP3R*Ca + IP3 <-> IP3R*IP3*Ca,IP3R_Ca_IP3_kf,IPR3_Ca_IP3_kr
+22,None -> Ca,,CaER_release_k
+23,Ca -> None,,Ca_inwards_k

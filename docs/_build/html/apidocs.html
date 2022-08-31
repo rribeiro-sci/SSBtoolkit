@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Documentation &mdash; SSBtoolkit v1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Frequently Asked Questions" href="faq.html" />
+    <link rel="prev" title="What is the SSBtoolkit?" href="about.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> SSBtoolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction to Structure Systems Biology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">What is the SSBtoolkit?</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SSBtoolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>API Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/apidocs.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-ssbtoolkit">
+<span id="api-documentation"></span><h1>API Documentation<a class="headerlink" href="#module-ssbtoolkit" title="Permalink to this headline"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="ssbtoolkit.binding">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ssbtoolkit.</span></span><span class="sig-name descname"><span class="pre">binding</span></span><a class="headerlink" href="#ssbtoolkit.binding" title="Permalink to this definition"></a></dt>
+<dd><p>This class simulate ligand-target binding curves.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.binding.bind">
+<span class="sig-name descname"><span class="pre">bind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.binding.bind" title="Permalink to this definition"></a></dt>
+<dd><p>Applies an function to calculate the fraction of occupited receptors at equilibrium.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>receptor_conc</strong> – Required (kwarg flt): concentration of receptor</p></li>
+<li><p><strong>lig_conc_range</strong> – Required (kwarg array): array of range of ligand concentration</p></li>
+<li><p><strong>pKd</strong> – Required (kwarg flt): pKd value of the ligand</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.binding.maxbend">
+<span class="sig-name descname"><span class="pre">maxbend</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.binding.maxbend" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates the maximum bending point of a sigmoid-shaped curve according to the mathod of Sebaugh et al., 2003.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>drug_receptor</strong> – Required (int): concentration of the receptor</p></li>
+<li><p><strong>lig_conc_range</strong> – Required (array): array of a range of ligand concentration</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>instance .submax_concentration (flt)</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The minimization uses the Nelder-Mead method.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.binding.show_curve">
+<span class="sig-name descname"><span class="pre">show_curve</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.binding.show_curve" title="Permalink to this definition"></a></dt>
+<dd><p>Plots ligand-target binding curve</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ssbtoolkit.convert">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ssbtoolkit.</span></span><span class="sig-name descname"><span class="pre">convert</span></span><a class="headerlink" href="#ssbtoolkit.convert" title="Permalink to this definition"></a></dt>
+<dd><p>Helper functions</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.convert.KineticTempScale">
+<span class="sig-name descname"><span class="pre">KineticTempScale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">koff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'K'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.convert.KineticTempScale" title="Permalink to this definition"></a></dt>
+<dd><p>This function rescales the kinetics constants to a specific temperature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kon</strong> – Required (flt): foward kinetic constant</p></li>
+<li><p><strong>koff</strong> – Required (flt): reverse kinetic constant</p></li>
+<li><p><strong>T1</strong> – Required (flt): Initial temperature</p></li>
+<li><p><strong>T2</strong> – Required (flt): Final temperature</p></li>
+</ul>
+</dd>
+<dt class="field-even">Paramter Tu</dt>
+<dd class="field-even"><p>Optional (kwarg str): Temperature Units (kelvin=’K’, celsius=’C’)</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(flt, flt)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.convert.microgr2nanomolar">
+<span class="sig-name descname"><span class="pre">microgr2nanomolar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">concentration</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.convert.microgr2nanomolar" title="Permalink to this definition"></a></dt>
+<dd><p>This function converts micrograms of protein in nanomolar.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uniprotID</strong> – Required (str)</p></li>
+<li><p><strong>concentration</strong> – Required (int): concentration od protein in micrograms</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(flt) concentration of protein in nM</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function will obtain the sequence of the protein from UNIPROT and calculate automatically its molecular mass</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ssbtoolkit.get">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ssbtoolkit.</span></span><span class="sig-name descname"><span class="pre">get</span></span><a class="headerlink" href="#ssbtoolkit.get" title="Permalink to this definition"></a></dt>
+<dd><p>Tools to retrive protein information</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.get.gprotein">
+<span class="sig-name descname"><span class="pre">gprotein</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.get.gprotein" title="Permalink to this definition"></a></dt>
+<dd><p>This function query the SSBtoolkit internal database to extract the G protein associated to GPCR.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>it just works for Human GPCRS!</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>uniprotID</strong> – Required (str)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ssbtoolkit.get.tauRAMD">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tauRAMD</span></span><a class="headerlink" href="#ssbtoolkit.get.tauRAMD" title="Permalink to this definition"></a></dt>
+<dd><p>Implementation of the tRAMD method by Kokh et al., 2018.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.get.tauRAMD.Run">
+<span class="sig-name descname"><span class="pre">Run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.get.tauRAMD.Run" title="Permalink to this definition"></a></dt>
+<dd><p>Calulates the residence time of a ligand from RAMD simualtions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prefix</strong> – Required (kwarg str): directory path of .dat files</p></li>
+<li><p><strong>dt</strong> – Optional (kwarg flt): MD simulations time step in ns (defaul is 2E-6)</p></li>
+<li><p><strong>softwr</strong> – Optional (kwarg str): software used to perform RAMD simulations: NAMD, GROMACS (default)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return (str)</dt>
+<dd class="field-even"><p>residence time</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.get.tauRAMD.plotRTdistribuitons">
+<span class="sig-name descname"><span class="pre">plotRTdistribuitons</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.get.tauRAMD.plotRTdistribuitons" title="Permalink to this definition"></a></dt>
+<dd><p>Plots the residence time distributions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save</strong> – Optional (kwarg boolean): default False</p></li>
+<li><p><strong>filename</strong> – Optional (kwarg str)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.get.tauRAMD.plotRTstats">
+<span class="sig-name descname"><span class="pre">plotRTstats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.get.tauRAMD.plotRTstats" title="Permalink to this definition"></a></dt>
+<dd><p>Plots the residence time statistics</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save</strong> – Optional (kwarg boolean): default False</p></li>
+<li><p><strong>filename</strong> – Optional (kwarg str)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ssbtoolkit.</span></span><span class="sig-name descname"><span class="pre">simulation</span></span><a class="headerlink" href="#ssbtoolkit.simulation" title="Permalink to this definition"></a></dt>
+<dd><p>This class simulates the mathematical models of the signaling pathways.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.activation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">activation</span></span><a class="headerlink" href="#ssbtoolkit.simulation.activation" title="Permalink to this definition"></a></dt>
+<dd><p>Simulation of the activation of signaling pathways (i.e. activation by agonists)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.activation.Analysis">
+<span class="sig-name descname"><span class="pre">Analysis</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.activation.Analysis" title="Permalink to this definition"></a></dt>
+<dd><p>This function calculates the dose-response effect.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>instance of processed_data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.activation.Curve">
+<span class="sig-name descname"><span class="pre">Curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.activation.Curve" title="Permalink to this definition"></a></dt>
+<dd><p>Plots the dose-response curve.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.activation.PathwayParameters">
+<span class="sig-name descname"><span class="pre">PathwayParameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.activation.PathwayParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Display table with default pathway parameters.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>this functions requires the qgrid library. It doens’t work on Google Colab.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.activation.PathwayParametersToCSV">
+<span class="sig-name descname"><span class="pre">PathwayParametersToCSV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.activation.PathwayParametersToCSV" title="Permalink to this definition"></a></dt>
+<dd><p>Export pathway parameters into CSV format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> – Required (kwarg str): directory path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.activation.Potency">
+<span class="sig-name descname"><span class="pre">Potency</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.activation.Potency" title="Permalink to this definition"></a></dt>
+<dd><p>Return the potency values as a pandas DataFrame.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.activation.PotencyToCSV">
+<span class="sig-name descname"><span class="pre">PotencyToCSV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.activation.PotencyToCSV" title="Permalink to this definition"></a></dt>
+<dd><p>Exports the potency values into csv format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> – Required (kwarg str): directory path to save the csv file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.activation.PotencyToDict">
+<span class="sig-name descname"><span class="pre">PotencyToDict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.activation.PotencyToDict" title="Permalink to this definition"></a></dt>
+<dd><p>Convert potencies into a dictionary.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.activation.Reactions">
+<span class="sig-name descname"><span class="pre">Reactions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.activation.Reactions" title="Permalink to this definition"></a></dt>
+<dd><p>Display pathway reactions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.activation.Run">
+<span class="sig-name descname"><span class="pre">Run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.activation.Run" title="Permalink to this definition"></a></dt>
+<dd><p>This function runs the pathway simulation and returns the raw simulation data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.activation.SetSimulationParameters">
+<span class="sig-name descname"><span class="pre">SetSimulationParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.activation.SetSimulationParameters" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ligands</strong> – Required (kwargs list): list of ligands’ names (str)</p></li>
+<li><p><strong>affinities</strong> – Required (kwargs list): list of pKd values (flt)</p></li>
+<li><p><strong>pathway</strong> – Required (kwargs str): name of the pathway (‘Gs’, ‘Gi’, ‘Gq’)</p></li>
+<li><p><strong>receptor_conc</strong> – Required (kwargs flt): receptors concentration (nM)</p></li>
+<li><p><strong>lig_conc_range</strong> – Required (kwargs array): range of ligands’ concentration</p></li>
+<li><p><strong>ttotal</strong> – Required (kwargs int): simulation time (seconds)</p></li>
+<li><p><strong>nsteps</strong> – Required (kwargs int): simulation time step</p></li>
+<li><p><strong>binding_kinetics</strong> – Optional (kwargs boolean): default (False)</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>the order of the lists of ligands names and affinities list must be the same.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.activation.UserPathwayParameters">
+<span class="sig-name descname"><span class="pre">UserPathwayParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.activation.UserPathwayParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Import user pathway parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> – Required (kwarg str): directory path</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.fitModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fitModel</span></span><a class="headerlink" href="#ssbtoolkit.simulation.fitModel" title="Permalink to this definition"></a></dt>
+<dd><p>Fit a model to experimental data.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This class was developed to reproduce data from a specific experimental setup. Please see tutorial 4 (OXTR pathay). Use carefully!</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.fitModel.PathwayParameters">
+<span class="sig-name descname"><span class="pre">PathwayParameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.fitModel.PathwayParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Display table with default pathway parameters.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>this functions requires the qgrid library. It doens’t work on Google Colab.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.fitModel.PathwayParametersToCSV">
+<span class="sig-name descname"><span class="pre">PathwayParametersToCSV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.fitModel.PathwayParametersToCSV" title="Permalink to this definition"></a></dt>
+<dd><p>Export pathway parameters into CSV format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> – Required (kwarg str): directory path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.fitModel.Reactions">
+<span class="sig-name descname"><span class="pre">Reactions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.fitModel.Reactions" title="Permalink to this definition"></a></dt>
+<dd><p>Display pathway reactions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.fitModel.Run">
+<span class="sig-name descname"><span class="pre">Run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.fitModel.Run" title="Permalink to this definition"></a></dt>
+<dd><p>Fits of the model to experimental data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>expratio</strong> – Required (kwargs flt): experimental signalling specie concentration ratio</p></li>
+<li><p><strong>target_parameter</strong> – Required (kwargs str):kinetic parameter to me modified</p></li>
+<li><p><strong>maxiter</strong> – Required (kwargs int): maximum number of iteration</p></li>
+<li><p><strong>seed</strong> – Required (kwargs flt): ramdom seed for scaling the modified parameter</p></li>
+<li><p><strong>seed_incrementor</strong> – Required (kwargs flt): seed incrementor (each iteration will increment the seed by this value)</p></li>
+<li><p><strong>seed_decrementor</strong> – Required (kwargs flt): seed decrementor (each iteration will decrement the seed by this value)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.fitModel.SetSimulationParameters">
+<span class="sig-name descname"><span class="pre">SetSimulationParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.fitModel.SetSimulationParameters" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pathway_parameters</strong> – Required (kwargs): dict of pathway parameters</p></li>
+<li><p><strong>pathway</strong> – Required (kwargs str): name of the pathway (‘Gs’, ‘Gi’, ‘Gq’)</p></li>
+<li><p><strong>ttotal</strong> – Required (kwargs int): simulation time (seconds)</p></li>
+<li><p><strong>nsteps</strong> – Required (kwargs int): simulation time step</p></li>
+<li><p><strong>observable</strong> – Required (kwargs str): molecular specie to be measured</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>instances of all parameters</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.fitModel.UserPathwayParameters">
+<span class="sig-name descname"><span class="pre">UserPathwayParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.fitModel.UserPathwayParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Import user pathway parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> – Required (kwarg str): directory path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.fitModel.plotCurves">
+<span class="sig-name descname"><span class="pre">plotCurves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.fitModel.plotCurves" title="Permalink to this definition"></a></dt>
+<dd><p>Plot the amount of obeservable in function of time, Amplitude, Area Under the Curve, and Full Width at Half Maximum.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save</strong> – Optional (kwarg boolean): default False</p></li>
+<li><p><strong>filename</strong> – Optional (kwarg str)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.fitModel.plotIterations">
+<span class="sig-name descname"><span class="pre">plotIterations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.fitModel.plotIterations" title="Permalink to this definition"></a></dt>
+<dd><p>Plot iterations.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.inhibition">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">inhibition</span></span><a class="headerlink" href="#ssbtoolkit.simulation.inhibition" title="Permalink to this definition"></a></dt>
+<dd><p>Simulation of the inhibition of signaling pathways (i.e. inhibition by antagonists).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.inhibition.Analysis">
+<span class="sig-name descname"><span class="pre">Analysis</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.inhibition.Analysis" title="Permalink to this definition"></a></dt>
+<dd><p>This function calculates the dose-response effect.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>instance processed_data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.inhibition.Curve">
+<span class="sig-name descname"><span class="pre">Curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.inhibition.Curve" title="Permalink to this definition"></a></dt>
+<dd><p>Plot the dose-response curve.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.inhibition.PathwayParameters">
+<span class="sig-name descname"><span class="pre">PathwayParameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.inhibition.PathwayParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Display table with default pathway parameters.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>this functions requires the qgrid library. It doens’t work on Google Colab.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.inhibition.PathwayParametersToCSV">
+<span class="sig-name descname"><span class="pre">PathwayParametersToCSV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.inhibition.PathwayParametersToCSV" title="Permalink to this definition"></a></dt>
+<dd><p>Export pathway parameters into CSV format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> – Required (kwarg str): directory path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.inhibition.Potency">
+<span class="sig-name descname"><span class="pre">Potency</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.inhibition.Potency" title="Permalink to this definition"></a></dt>
+<dd><p>Return the potency values as a pandas DataFrame.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.inhibition.PotencyToCSV">
+<span class="sig-name descname"><span class="pre">PotencyToCSV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.inhibition.PotencyToCSV" title="Permalink to this definition"></a></dt>
+<dd><p>Exports the potency values into csv format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> – Required (kwarg str): directory path to save the csv file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.inhibition.PotencyToDict">
+<span class="sig-name descname"><span class="pre">PotencyToDict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.inhibition.PotencyToDict" title="Permalink to this definition"></a></dt>
+<dd><p>Convert potencies into a dictionary.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.inhibition.Reactions">
+<span class="sig-name descname"><span class="pre">Reactions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.inhibition.Reactions" title="Permalink to this definition"></a></dt>
+<dd><p>Display pathway reactions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.inhibition.Run">
+<span class="sig-name descname"><span class="pre">Run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.inhibition.Run" title="Permalink to this definition"></a></dt>
+<dd><p>This function runs the pathway simulation and returns the raw simulation data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.inhibition.SetSimulationParameters">
+<span class="sig-name descname"><span class="pre">SetSimulationParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.inhibition.SetSimulationParameters" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agonist</strong> – Required (kwargs str): agonist name</p></li>
+<li><p><strong>agonist_affinity</strong> – Required (kwargs flt): agonist pKd value</p></li>
+<li><p><strong>agonist_submaximal_conc</strong> – Required (kwargs flt): agonist submaximal concentration</p></li>
+<li><p><strong>antagonists</strong> – Required (kwargs list):list of antagonists names (str)</p></li>
+<li><p><strong>antagonists_affinities</strong> – Required (kwargs list): list of antagonists affinity values (flt)</p></li>
+<li><p><strong>antagonists_conc_range</strong> – Required (kwargs array): range of ligands’ concentration (nM)</p></li>
+<li><p><strong>pathway</strong> – Required (kwargs str): name of the pathway (‘Gs’, ‘Gi’, ‘Gq’)</p></li>
+<li><p><strong>receptor_conc</strong> – Required (kwargs flt): receptors concentration (nM)</p></li>
+<li><p><strong>ttotal</strong> – Required (kwargs int): simulation time (seconds)</p></li>
+<li><p><strong>nsteps</strong> – Required (kwargs int): simulation time step</p></li>
+<li><p><strong>kinetics</strong> – Optional (kwargs boolean): default (False)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>instances of all parameters</p>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>the order of the lists of the antagonists names and affinities list must be the same.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.inhibition.UserPathwayParameters">
+<span class="sig-name descname"><span class="pre">UserPathwayParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.inhibition.UserPathwayParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Import user pathway parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> – Required (kwarg str): directory path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ssbtoolkit.simulation.inhibition.constants">
+<span class="sig-name descname"><span class="pre">constants</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ssbtoolkit.simulation.inhibition.constants" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the potency values.</p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="about.html" class="btn btn-neutral float-left" title="What is the SSBtoolkit?" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="faq.html" class="btn btn-neutral float-right" title="Frequently Asked Questions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Rui Pedro Ribeiro.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
