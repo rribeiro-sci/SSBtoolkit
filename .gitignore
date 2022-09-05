@@ -5,4 +5,4 @@ src/lib/__pycache__/
 src/lib/autogrid_reference_files/
 src/lib/autogrids/
 .ipynb_checkpoints/
-
+debugging.txt

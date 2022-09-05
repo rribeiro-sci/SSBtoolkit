@@ -31,10 +31,7 @@ __email__ = "rui.ribeiro@univr.it"
 __status__ = "Production"
 
 USAGE = __doc__.format(__author__, __email__)
-
-def network(LR=None, kinetics=True, **kwargs):
-
-    defaultKwargs = {
+defaultParameters = {
         'time_in':0,
         'time_out':0,
         'L_init':0,
@@ -76,7 +73,17 @@ def network(LR=None, kinetics=True, **kwargs):
         'DAG_decay':0.15,
     }
 
-    parameters={**defaultKwargs, **kwargs}
+def network(LR=None, kinetics=True, **kwargs):
+
+    parameters={**defaultParameters, **kwargs}
+    def myeval(x):
+        try:
+            y = eval(x)
+        except:
+            y=x
+        return y
+
+    parameters = dict(zip(parameters.keys(), map(myeval, parameters.values())))
 
     #Start a model
     Model()

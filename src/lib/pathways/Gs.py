@@ -19,10 +19,7 @@ from pysb.macros import *
 from sympy import Piecewise
 from pysb.macros import create_t_obs, drug_binding
 
-
-def network(LR=None, kinetics=True, **kwargs):
-
-    defaultKwargs = {
+defaultParameters = {
         'time_in':0,
         'time_out':0,
         'L_init':0.01,
@@ -91,8 +88,21 @@ def network(LR=None, kinetics=True, **kwargs):
         'PKA_activation': 10*1E3,
         'PKA_activation_reverse': 0.01
     }
-    parameters={**defaultKwargs, **kwargs}
+
+def network(LR=None, kinetics=True, **kwargs):
+
+    parameters={**defaultParameters, **kwargs}
  
+    def myeval(x):
+        try:
+            y = eval(x)
+        except:
+            y=x
+        return y
+
+    parameters = dict(zip(parameters.keys(), map(myeval, parameters.values())))
+
+
     #Start a model
     Model()
 
