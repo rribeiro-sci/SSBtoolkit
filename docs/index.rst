@@ -46,6 +46,53 @@ protocols.
    apidocs
    faq
 
+\
+
+\ 
+
+Availability and License
+========================
+The source code is freely available at https://github.com/rribeiro-sci/SSBtoolkit under
+the Apache 2.0 license. Tutorial notebooks containing minimal working examples can be found at https://github.com/rribeiro-sci/SSBtoolkit.
+
+\
+
+\ 
+
+Developed by
+============
+.. image:: _static/FZJ_logo.svg
+  :width: 200
+
+\
+
+\ 
+
+Funded by
+=========
+.. image:: https://res.cloudinary.com/djz27k5hg/image/upload/v1637657234/logos/HBP_horizontal_logo_qtcyzn.png
+  :width: 200
+  :alt: Alternative text
+  
+Citation |DOI for Citing pyGOMoDo|
+==================================
+
+pyGOMoDo is research software. If you make use of pyGOMoDo in scientific
+publications, please cite it. The BibTeX reference is
+
+::
+
+    @article{,
+        title = {},
+        author = {},
+        journal = {},
+        volume = {},
+        number = {},
+        pages = {},
+        year = {},
+        doi = {}
+    }
+
 
 Indices and tables
 ==================
