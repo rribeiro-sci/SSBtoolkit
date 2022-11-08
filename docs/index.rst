@@ -61,7 +61,7 @@ the Apache 2.0 license. Tutorial notebooks containing minimal working examples c
 
 Developed by
 ============
-.. image:: _static/FZJ_logo.svg
+.. image:: https://res.cloudinary.com/djz27k5hg/image/upload/v1637333672/logos/Juelich_logo_100px_ecv2hy.png
   :width: 200
 
 \
@@ -74,7 +74,7 @@ Funded by
   :width: 200
   :alt: Alternative text
   
-Citation |DOI for Citing pyGOMoDo|
+Citation |DOI for Citing ssbtoolkit|
 ==================================
 
 pyGOMoDo is research software. If you make use of pyGOMoDo in scientific
@@ -100,3 +100,7 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+
+.. |DOI for Citing ssbtoolkit| image:: https://img.shields.io/badge/DOI-10.1016%2Fj.bpj.2015.08.015-blue.svg
+   :target: https://github.com/rribeiro-sci/SSBtoolkit
