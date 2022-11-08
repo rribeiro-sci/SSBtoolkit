@@ -75,7 +75,7 @@ Funded by
   :alt: Alternative text
   
 Citation |DOI for Citing ssbtoolkit|
-==================================
+====================================
 
 pyGOMoDo is research software. If you make use of pyGOMoDo in scientific
 publications, please cite it. The BibTeX reference is

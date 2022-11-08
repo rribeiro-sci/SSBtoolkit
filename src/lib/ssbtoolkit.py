@@ -67,9 +67,11 @@ warnings.simplefilter(action='ignore')
 #Human Target Receptors DataBase directory PATH
 HuTRdb_path = os.path.join(os.getcwd(),'SSBtoolkit/src/databases/HuTRdb.sqlite3')
 
-
+"""
+SSBtoolkit API
+"""
 class convert:
-    "Helper functions"
+    """Helper functions"""
     def microgr2nanomolar(uniprotID, concentration):
         """
         This function converts micrograms of protein in nanomolar. 
@@ -164,7 +166,7 @@ class convert:
         return round(skon, 3), round(skoff,3)
 
 class get:
-    '''Tools to retrive protein information'''
+    """Tools to retrive protein information"""
 
     def gprotein(uniprotID):
         """
@@ -392,9 +394,7 @@ class get:
             return
     
 class binding:
-    """
-    This class simulate ligand-target binding curves.
-    """
+    """This class simulate ligand-target binding curves."""
     def __init__(self):
         self.receptor_conc = None
         self.lig_conc_range =  None
