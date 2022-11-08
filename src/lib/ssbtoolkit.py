@@ -45,7 +45,7 @@ from pysb.macros import *
 from pysb.simulator import ScipyOdeSimulator
 
 #Layout libraries
-import qgrid 
+#import qgrid 
 
 #directories (problem with sphinx)
 abs_path=(os.path.join(os.path.split(os.getcwd())[0], 'src/lib'))
@@ -573,6 +573,7 @@ class simulation:
 
             .. warning:: this functions requires the qgrid library. It doens't work on Google Colab.
             """
+            import qgrid
             self._DefaultPathwayParametersDataFrame =  pd.read_csv('src/lib/pathways/{}_parameters.csv'.format(self._pathway))
 
             col_opts = { 'editable': False, 'sortable':False}
@@ -586,6 +587,7 @@ class simulation:
 
             :parameter path:     Required (kwarg str): directory path
             """
+            import qgrid
             self._DefaultPathwayParametersDataFrame =  pd.read_csv(path)
             col_opts = { 'editable': False, 'sortable':False}
             col_defs = {'Value': { 'editable': True, 'width': 150 }}
@@ -973,6 +975,7 @@ class simulation:
 
             .. warning:: this functions requires the qgrid library. It doens't work on Google Colab.
             """
+            import qgrid
             self._DefaultPathwayParametersDataFrame =  pd.read_csv('src/lib/pathways/{}_parameters.csv'.format(self._pathway))
 
             col_opts = { 'editable': False, 'sortable':False}
@@ -986,6 +989,7 @@ class simulation:
 
             :parameter path:     Required (kwarg str): directory path
             """
+            import qgrid
             self._DefaultPathwayParametersDataFrame =  pd.read_csv(path)
             col_opts = { 'editable': False, 'sortable':False}
             col_defs = {'Value': { 'editable': True, 'width': 150 }}
@@ -1379,6 +1383,7 @@ class simulation:
 
             .. warning:: this functions requires the qgrid library. It doens't work on Google Colab.
             """
+            import qgrid
             self._DefaultPathwayParametersDataFrame =  pd.read_csv('src/lib/pathways/{}_parameters.csv'.format(self._pathway))
 
             col_opts = { 'editable': False, 'sortable':False}
@@ -1392,6 +1397,7 @@ class simulation:
 
             :parameter path:     Required (kwarg str): directory path
             """
+            import qgrid
             self._DefaultPathwayParametersDataFrame =  pd.read_csv(path)
             col_opts = { 'editable': False, 'sortable':False}
             col_defs = {'Value': { 'editable': True, 'width': 150 }}
