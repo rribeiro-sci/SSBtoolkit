@@ -648,10 +648,6 @@ class simulation:
                 except:
                     self._PathwayParameters = self._DefaultPathwayParametersDataFrame.set_index('Parameter').iloc[:,0].to_dict()
 
-            #elif self._DefaultPathwayParametersDataFrame.empty and self._binding_kinetic_parameters is not None: 
-            #    self._DefaultPathwayParametersDataFrame = pd.read_csv('src/lib/pathways/{}_parameters.csv'.format(self._pathway))
-                #self._PathwayParameters = {**self._DefaultPathwayParametersDataFrame.set_index('Parameter').iloc[:,0].to_dict(), **self._binding_kinetic_parameters}
-            
             elif self._DefaultPathwayParametersDataFrame.empty is False and self._binding_kinetic_parameters is not None:
                 try: 
                     #extract data from qgrid
