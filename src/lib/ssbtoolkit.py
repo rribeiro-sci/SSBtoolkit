@@ -648,9 +648,9 @@ class simulation:
                 except:
                     self._PathwayParameters = self._DefaultPathwayParametersDataFrame.set_index('Parameter').iloc[:,0].to_dict()
 
-            elif self._DefaultPathwayParametersDataFrame.empty and self._binding_kinetic_parameters is not None: 
-                self._DefaultPathwayParametersDataFrame = pd.read_csv('src/lib/pathways/{}_parameters.csv'.format(self._pathway))
-                self._PathwayParameters = {**self._DefaultPathwayParametersDataFrame.set_index('Parameter').iloc[:,0].to_dict(), **self._binding_kinetic_parameters}
+            #elif self._DefaultPathwayParametersDataFrame.empty and self._binding_kinetic_parameters is not None: 
+            #    self._DefaultPathwayParametersDataFrame = pd.read_csv('src/lib/pathways/{}_parameters.csv'.format(self._pathway))
+                #self._PathwayParameters = {**self._DefaultPathwayParametersDataFrame.set_index('Parameter').iloc[:,0].to_dict(), **self._binding_kinetic_parameters}
             
             elif self._DefaultPathwayParametersDataFrame.empty is False and self._binding_kinetic_parameters is not None:
                 try: 
@@ -672,6 +672,12 @@ class simulation:
                 ligand_name = os.path.splitext(str(ligand))[0]
                 data=[]
                 utils.printProgressBar(0, len(self._lig_conc_range), prefix = "{:<15}".format(ligand_name[:15]), suffix = 'Complete', length = 50)
+
+                ###DANGER ZONE###
+                if self._DefaultPathwayParametersDataFrame.empty and self._binding_kinetic_parameters is not None: 
+                    self._DefaultPathwayParametersDataFrame = pd.read_csv('src/lib/pathways/{}_parameters.csv'.format(self._pathway))
+                    self._PathwayParameters = {**self._DefaultPathwayParametersDataFrame.set_index('Parameter').iloc[:,0].to_dict(), **self._binding_kinetic_parameters[self._ligands.index(ligand)]}
+                ######################
 
                 for idx in range(len(self._lig_conc_range)):
 
