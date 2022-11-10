@@ -82,15 +82,13 @@ publications, please cite it. The BibTeX reference is
 
 ::
 
-    @article{,
-        title = {},
-        author = {},
-        journal = {},
-        volume = {},
-        number = {},
-        pages = {},
-        year = {},
-        doi = {}
+    @article{ribeiro_ssb_2022,
+        title={{SSB} toolkit: from molecular structure to subcellular signaling pathways.},
+        author={Ribeiro, Rui Pedro and Gossen, Jonas and Rossetti, Giulia and Giorgetti, Alejandro},
+        publisher={bioRxiv},
+        url={https://www.biorxiv.org/content/10.1101/2022.11.08.515595v1},
+        doi={10.1101/2022.11.08.515595},
+        year={2022}
     }
 
 
