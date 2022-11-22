@@ -15,7 +15,6 @@
 ##################################################################################
 from pysb import *
 from pysb.macros import *
-from pysb.macros import create_t_obs, drug_binding
 from sympy import Piecewise
 
 defaultParameters = {

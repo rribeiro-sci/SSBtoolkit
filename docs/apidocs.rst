@@ -3,5 +3,5 @@ API Documentation
 .. automodule:: ssbtoolkit
    :members:
    
-.. automodule:: utils
+.. automodule:: Utils
    :members:

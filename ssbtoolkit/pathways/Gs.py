@@ -17,7 +17,7 @@
 from pysb import *
 from pysb.macros import *
 from sympy import Piecewise
-from pysb.macros import create_t_obs, drug_binding
+from pysb.macros import create_t_obs
 
 defaultParameters = {
         'time_in':0,

@@ -33,6 +33,11 @@ How to do:
 
 
 
+## How to install
+
+```
+pip install ssbtoolkit
+```
 
 ## Cite Us
 If you use or adapt the SSBtoolkit for your own research projects please cite us.

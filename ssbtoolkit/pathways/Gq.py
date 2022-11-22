@@ -16,7 +16,7 @@
 
 from pysb import *
 from pysb.macros import *
-from pysb.macros import create_t_obs, drug_binding
+from pysb.macros import create_t_obs
 from sympy import Piecewise
 
 
@@ -30,7 +30,6 @@ __maintainer__ = "Rui Ribeiro"
 __email__ = "rui.ribeiro@univr.it"
 __status__ = "Production"
 
-USAGE = __doc__.format(__author__, __email__)
 defaultParameters = {
         'time_in':0,
         'time_out':0,
