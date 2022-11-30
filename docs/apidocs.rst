@@ -1,7 +1,10 @@
 API Documentation
 =================
-.. automodule:: ssbtoolkit
+.. automodule:: Binding
    :members:
-   
+
+.. automodule:: Simulation
+   :members:
+
 .. automodule:: Utils
    :members:

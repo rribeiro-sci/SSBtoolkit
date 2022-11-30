@@ -46,6 +46,51 @@ protocols.
    apidocs
    faq
 
+\
+
+\ 
+
+Availability and License
+========================
+The source code is freely available at https://github.com/rribeiro-sci/SSBtoolkit under
+the Apache 2.0 license. Tutorial notebooks containing minimal working examples can be found at https://github.com/rribeiro-sci/SSBtoolkit.
+
+\
+
+\ 
+
+Developed by
+============
+.. image:: https://res.cloudinary.com/djz27k5hg/image/upload/v1637333672/logos/Juelich_logo_100px_ecv2hy.png
+  :width: 200
+
+\
+
+\ 
+
+Funded by
+=========
+.. image:: https://res.cloudinary.com/djz27k5hg/image/upload/v1637657234/logos/HBP_horizontal_logo_qtcyzn.png
+  :width: 200
+  :alt: Alternative text
+  
+Citation |DOI for Citing ssbtoolkit|
+====================================
+
+pyGOMoDo is research software. If you make use of pyGOMoDo in scientific
+publications, please cite it. The BibTeX reference is
+
+::
+
+    @article{ribeiro_ssb_2022,
+        title={{SSB} toolkit: from molecular structure to subcellular signaling pathways.},
+        author={Ribeiro, Rui Pedro and Gossen, Jonas and Rossetti, Giulia and Giorgetti, Alejandro},
+        publisher={bioRxiv},
+        url={https://www.biorxiv.org/content/10.1101/2022.11.08.515595v1},
+        doi={10.1101/2022.11.08.515595},
+        year={2022}
+    }
+
 
 Indices and tables
 ==================
@@ -53,3 +98,7 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+
+.. |DOI for Citing ssbtoolkit| image:: https://img.shields.io/badge/DOI-10.1016%2Fj.bpj.2015.08.015-blue.svg
+   :target: https://github.com/rribeiro-sci/SSBtoolkit

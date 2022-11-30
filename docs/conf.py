@@ -12,7 +12,8 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../src/lib'))
+sys.path.insert(0, os.path.abspath('../ssbtoolkit'))
+sys.path.insert(0, os.path.abspath('../'))
 
 
 # -- Project information -----------------------------------------------------
@@ -22,7 +23,7 @@ copyright = '2022, Rui Pedro Ribeiro'
 author = 'Rui Pedro Ribeiro'
 
 # The full version, including alpha/beta/rc tags
-release = 'v1'
+release = 'v1.0.1'
 
 
 # -- General configuration ---------------------------------------------------
