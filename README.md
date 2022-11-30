@@ -1,43 +1,39 @@
 # SSBtoolkit
-
-<div style="padding-bottom:50px">
-<img src="https://res.cloudinary.com/djz27k5hg/image/upload/v1637335206/logos/Logo_des_Forschungszentrums_J_C3_BClich_seit_2018_hcliq4.svg" width=250 align='left' style="margin-top:40px"/>
-<img src="https://res.cloudinary.com/djz27k5hg/image/upload/v1637657234/logos/HBP_horizontal_logo_qtcyzn.png" width="300" align='left' style="margin-left:50px;">
-</div>  
-<br>
-<br><br><br><br><br>
+[![DOI](https://zenodo.org/badge/414606361.svg)](https://zenodo.org/badge/latestdoi/414606361)
+[![Documentation Status](https://readthedocs.org/projects/ssbtoolkit/badge/?version=latest)](https://ssbtoolkit.readthedocs.io/en/latest/?badge=latest)
+![GitHub](https://img.shields.io/github/license/rribeiro-sci/ssbtoolkit)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/rribeiro-sci/ssbtoolkit)
+![PyPI](https://img.shields.io/pypi/v/ssbtoolkit)
 <br><br>
-<p align="center"> 
-  <img src="./docs/img/SSB_img.png" alt='SSB_img' width="500" >
-</p>
+
+## Description
+
+The SSB computational toolkit was developed to easily predict classical pharmacodynamic models of drug-GPCR (class A) interactions given just as input structural information of the receptor and the ligand. The toolkit doesn’t use any novel or untested methods. Instead, it brings together free and/or open source bioinformatic tools into a user-friendly pipeline to be used by experts and non-experts. The pipeline was built, as a first instance, in a jupyter notebook - an interactive computational environment for replication and exploration of scientific code and analysis. Nowadays, jupyter notebooks are being extensively used by the computational biology community, making them the preferred choice to share and rerun computational protocols.
 <br><br>
-In this tutorial series, you'll learn how to use the SSB (Structure Systems Biology toolkit) to simulate methematical models of signaling pathways of GPCRs.
-The toolkit is designed for non-experts in computational systems biology and it is being continually updated with new SSB features and models.
 
-The tutorials covers the core features of the SSBtoolkit python library. You don't need to follow all the tutorials orderly. You can just follow the one that suits your research interests. 
-
-The tutorials are organized as follows:
-
-What is about:
+## What is it about?
 * [Introduction to Sructure Systems Biology ](/docs/structure_systems_biology.md)
 * [The SSB toolkit explained](/docs/ssb_toolkit.md)
-
-
-How to do:
-
-1. [Simulation of dose-response curves of agonists using affinity values](SSBtoolkit-Tutorial1.ipynb) 
-2. [Simulation of dose-response curves of antagonists using affinity values](SSBtoolkit-Tutorial2.ipynb)
-3. [Simulation of dose-response curves of agonists using kenetic values](SSBtoolkit-Tutorial3A.ipynb)
-4. [Simulation of dose-response curves of agonists using data acquired with tauRAMD](SSBtoolkit-Tutorial3B-tauRAMD.ipynb)
-5. [Exploring SSB pathways associated to disease variants](SSBtoolkit-Tutorial4-OXTR.ipynb)
-
-
+<br><br>
 
 ## How to install
 
 ```
 pip install ssbtoolkit
 ```
+<br><br>
+
+## Tutorials
+1. [Simulation of dose-response curves of agonists using affinity values](Tutorials/SSBtoolkit-Tutorial1.ipynb) 
+2. [Simulation of dose-response curves of antagonists using affinity values](Tutorials/SSBtoolkit-Tutorial2.ipynb)
+3. [Simulation of dose-response curves of agonists using kenetic values](Tutorials/SSBtoolkit-Tutorial3A.ipynb)
+4. [Simulation of dose-response curves of agonists using data acquired with tauRAMD](Tutorials/SSBtoolkit-Tutorial3B-tauRAMD.ipynb)
+5. [Exploring SSB pathways associated to disease variants](Tutorials/SSBtoolkit-Tutorial4-OXTR.ipynb)
+<br><br>
+
+## Documentation
+Documentation can be found online on [ReadTheDocs](https://ssbtoolkit.readthedocs.io/).
+<br><br>
 
 ## Cite Us
 If you use or adapt the SSBtoolkit for your own research projects please cite us.
@@ -52,6 +48,14 @@ If you use or adapt the SSBtoolkit for your own research projects please cite us
     year={2022}
 }
 ```
+<br><br>
+
+## Developed on behalf of:
+<div style="padding-bottom:50px">
+<img src="https://res.cloudinary.com/djz27k5hg/image/upload/v1637335206/logos/Logo_des_Forschungszentrums_J_C3_BClich_seit_2018_hcliq4.svg" width=250 align='left' style="margin-top:40px"/>
+</div>  
+<br>
+<br><br><br><br>
 
 ## Acknowledgments
 
