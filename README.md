@@ -12,7 +12,6 @@ The SSB computational toolkit was developed to easily predict classical pharmaco
 <br><br>
 
 ## What is it about?
-* [Introduction to Sructure Systems Biology ](/docs/structure_systems_biology.md)
 * [The SSB toolkit explained](/docs/ssb_toolkit.md)
 <br><br>
 

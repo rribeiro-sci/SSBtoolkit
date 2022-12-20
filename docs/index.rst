@@ -41,7 +41,6 @@ protocols.
    :maxdepth: 2
    :caption: Contents:
    
-   introduction
    about
    apidocs
    faq
