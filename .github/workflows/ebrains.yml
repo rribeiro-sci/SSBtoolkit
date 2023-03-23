@@ -14,7 +14,7 @@ jobs:
           source_repo: "rribeiro-sci/SSBtoolkit"
           source_branch: "main"
           destination_repo: "https://ghpusher:${{ secrets.EBRAINS_GITLAB_ACCESS_TOKEN }}@gitlab.ebrains.eu/rribeiro/ssbtoolkit.git"
-          destination_branch: "master"
+          destination_branch: "main"
       - name: synctags
         uses: wei/git-sync@v3
         with:
