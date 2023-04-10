@@ -142,7 +142,7 @@ def network(LR=None, kinetics=True, **kwargs):
         Initial(R(R_b1=None, R_p='p0', R_s='i'), Parameter('R_0', parameters['R_init']-LR))  
 
     
-    Initial(Gi(Gi_b1=None), )                  
+    Initial(Gi(Gi_b1=None), Parameter('Gi_0', parameters['Gi_init']))                  
     Initial(AC5(AC5_b1=None, AC5_b2=None, AC5_b3=None, AC5_s='i'), Parameter('AC5_0', parameters['AC5_init']))  
     Initial(Ca(Ca_b1=None, Ca_l='cytos', Ca_s='free'), Parameter('Ca_cytos_free', parameters['Ca_cytos_free'])) 
     Initial(ATP(), Parameter('ATP_0', parameters['ATP_init']))
@@ -268,7 +268,7 @@ def network(LR=None, kinetics=True, **kwargs):
     Rule('reaction61', AC5(AC5_b1=None, AC5_b2=20, AC5_b3=10, AC5_s='a') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') % GaiGTP(GaiGTP_b1=10) >> AC5(AC5_b1=None, AC5_b2=20, AC5_b3=None, AC5_s='a') % Ca(Ca_b1=20, Ca_l='cytos', Ca_s='buff') + GaiGDP(), AC5_Ca_GaiGTP_ATP_decay)
 
     '''Several Subtypes of Phosphodiesterases (PDE) degrade cAMP'''
-    Parameter('PDE104_cAMP_kon', parameters['PDE104_cAMP_kon'])
+    Parameter('PDE4_cAMP_kon', parameters['PDE4_cAMP_kon'])
     Parameter('PDE4_cAMP_koff', parameters['PDE4_cAMP_koff'])
     Rule('reaction73', PDE4(PDE4_s='i') + cAMP() | PDE4(PDE4_s='a'), PDE4_cAMP_kon, PDE4_cAMP_koff)
 
@@ -287,7 +287,7 @@ def network(LR=None, kinetics=True, **kwargs):
     Parameter('PDE10_2cAMP_cAMP_koff', parameters['PDE10_2cAMP_cAMP_koff'])
     Rule('reaction77', PDE10(PDE10_c='Y', PDE10_s='i') + cAMP() | PDE10(PDE10_c='Y', PDE10_s='a'), PDE10_2cAMP_cAMP_kon, PDE10_2cAMP_cAMP_koff)
 
-    Parameter('PDE10_cAMP_decay', parameters[''])
+    Parameter('PDE10_cAMP_decay', parameters['PDE10_cAMP_decay'])
     Rule('reaction78', PDE10(PDE10_c='N', PDE10_s='a') >> PDE10(PDE10_c='N', PDE10_s='i') + AMP(), PDE10_cAMP_decay)
 
     Parameter('PDE10_2cAMP_cAMP_decay', parameters['PDE10_2cAMP_cAMP_decay'])
