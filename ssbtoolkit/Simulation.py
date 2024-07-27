@@ -1,3 +1,7 @@
+__author__ = "Rui Ribeiro"
+__email__ = "rui.ribeiro@univr.it"
+__year__= "2024"
+
 #LIBRARIES
 
 import sys, os, warnings, platform, site, importlib

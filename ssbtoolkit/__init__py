@@ -1,5 +1,9 @@
 import pkgutil
 
+__author__ = "Rui Ribeiro"
+__email__ = "rui.ribeiro@univr.it"
+__year__= "2024"
+
 __all__ = []
 for loader, module_name, is_pkg in pkgutil.walk_packages(__path__):
     __all__.append(module_name)

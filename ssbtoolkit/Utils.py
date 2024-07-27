@@ -1,6 +1,7 @@
 
 __author__ = "Rui Ribeiro"
 __email__ = "rui.ribeiro@univr.it"
+__year__= "2024"
 
 import os, warnings
 from glob import glob

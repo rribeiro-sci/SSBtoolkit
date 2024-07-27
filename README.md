@@ -8,7 +8,7 @@
 
 ## Description
 
-The SSB computational toolkit was developed to easily predict classical pharmacodynamic models of drug-GPCR (class A) interactions given just as input structural information of the receptor and the ligand. The toolkit doesn’t use any novel or untested methods. Instead, it brings together free and/or open source bioinformatic tools into a user-friendly pipeline to be used by experts and non-experts. The pipeline was built, as a first instance, in a jupyter notebook - an interactive computational environment for replication and exploration of scientific code and analysis. Nowadays, jupyter notebooks are being extensively used by the computational biology community, making them the preferred choice to share and rerun computational protocols.
+The SSB computational toolkit was developed to easily predict classical pharmacodynamic models of drug-GPCR (Class A) interactions using only the structural information of the receptor and the ligand as input. The toolkit does not employ any novel or untested methods. Instead, it integrates free and/or open-source bioinformatic tools into a user-friendly pipeline suitable for both experts and non-experts. Initially, the pipeline was built within a Jupyter notebook, an interactive computational environment for replicating and exploring scientific code and analysis. Jupyter notebooks are now extensively used by the computational biology community, making them the preferred choice for sharing and rerunning computational protocols.
 <br><br>
 
 ## What is it about?

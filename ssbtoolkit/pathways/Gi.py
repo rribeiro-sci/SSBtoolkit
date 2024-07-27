@@ -11,7 +11,7 @@
 ##   Nair, A. G. et al (2015). Sensing Positive versus Negative Reward Signals  ##
 ##   through Adenylyl Cyclase-Coupled GPCRs in Direct and Indirect Pathway      ##
 ##   Striatal Medium Spiny Neurons. The Journal of Neuroscience : the Official  ##
-##   Journal of the Society for Neuroscience, 35(41), 14017–14030.              ##                                                          ##
+##   Journal of the Society for Neuroscience, 35(41), 14017–14030.              ##                                             
 ##################################################################################
 from pysb import *
 from pysb.macros import *
