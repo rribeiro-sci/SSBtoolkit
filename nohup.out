@@ -1,0 +1,15 @@
+[90m[main 2025-01-24T11:18:33.492Z][0m update#setState idle
+2025-01-24 12:18:34.227 Electron[59498:18368062] +[IMKClient subclass]: chose IMKClient_Modern
+2025-01-24 12:18:34.227 Electron[59498:18368062] +[IMKInputSession subclass]: chose IMKInputSession_Modern
+[59503:0124/121838.682203:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
+[59503:0124/121838.737626:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
+2025-01-24 12:18:40.556 Code Helper (Renderer)[59504:18368220] CoreText note: Client requested name ".NewYork-Regular", it will get TimesNewRomanPSMT rather than the intended font. All system UI font access should be through proper APIs such as CTFontCreateUIFontForLanguage() or +[NSFont systemFontOfSize:].
+2025-01-24 12:18:40.556 Code Helper (Renderer)[59504:18368220] CoreText note: Set a breakpoint on CTFontLogSystemFontNameRequest to debug.
+[90m[main 2025-01-24T11:19:03.524Z][0m update#setState checking for updates
+[90m[main 2025-01-24T11:19:03.664Z][0m update#setState downloading
+2025-01-24 12:19:11.557 Electron[59498:18370178] Download completed to: file:///Users/ruiribeiro/Library/Caches/com.microsoft.VSCode.ShipIt/update.5yngJNp/VSCode-darwin-universal.zip
+[90m[main 2025-01-24T11:19:15.276Z][0m update#setState downloaded
+[90m[main 2025-01-24T11:19:15.277Z][0m update#setState ready
+[59503:0124/121916.810235:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
+[59503:0124/121916.855261:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
+[90m[main 2025-01-24T11:22:17.616Z][0m Extension host with pid 59546 exited with code: 0, signal: unknown.
