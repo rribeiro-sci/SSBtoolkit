@@ -1,5 +1,6 @@
 # SSBtoolkit
 [![DOI](https://zenodo.org/badge/414606361.svg)](https://zenodo.org/badge/latestdoi/414606361)
+![Paper](https://doi.org/10.1021/acs.jcim.5c00165)
 [![Documentation Status](https://readthedocs.org/projects/ssbtoolkit/badge/?version=latest)](https://ssbtoolkit.readthedocs.io/en/latest/?badge=latest)
 ![GitHub](https://img.shields.io/github/license/rribeiro-sci/ssbtoolkit)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/rribeiro-sci/ssbtoolkit)
@@ -39,12 +40,11 @@ If you use or adapt the SSBtoolkit for your own research projects please cite us
 
 ```
 @article{ribeiro_ssb_2022,
-    title={{SSB} toolkit: from molecular structure to subcellular signaling pathways.},
+    title={Structural Systems Biology Toolkit (SSBtoolkit): From Molecular Structure to Subcellular Signaling Pathways},
     author={Ribeiro, Rui Pedro and Gossen, Jonas and Rossetti, Giulia and Giorgetti, Alejandro},
-    publisher={bioRxiv},
-    url={https://www.biorxiv.org/content/10.1101/2022.11.08.515595v1},
-    doi={10.1101/2022.11.08.515595},
-    year={2022}
+    publisher={J. Chem. Inf. Model.},
+    url={https://doi.org/10.1021/acs.jcim.5c00165},
+    year={2025}
 }
 ```
 <br><br>
